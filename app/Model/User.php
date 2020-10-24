@@ -5,7 +5,7 @@ namespace App\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Model\PlateNo;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'phone_number', 'plate_number', 'geolocation',
+        'phone_number', 'plate_number', 'geolocation', 'email', 'name'
     ];
 
 
@@ -31,6 +31,6 @@ class User extends Authenticatable
     ];
 
     public function plates(){
-        return $this->hasMany(User::class);
+        return $this->hasMany(PlateNo::class);
     }
 }

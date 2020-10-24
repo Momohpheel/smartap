@@ -34,8 +34,9 @@ class ClientController extends Controller
             $client->state = $validated['state'];
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
+            $client->subscription_plan = $validated['subscription_plan'];
             $client->token = Str::random(50);
-            $client->url = env('APP_URL').$client->token;
+            $client->url = env('APP_URL').'/'.$client->token;
             $client->save();
 
 

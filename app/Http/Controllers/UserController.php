@@ -31,7 +31,7 @@ class UserController extends Controller
         try{
 
             $validated = $request->validate([
-                'email' => 'required|email|unique',
+                'email' => 'required|email',
                 'phone_number' => 'required|string',
                 'name' => 'required|string',
                 'geolocation' => 'required|string',
@@ -46,9 +46,9 @@ class UserController extends Controller
             $user->save();
 
             $pl_no = new PlateNo;
-            $user->plate_number = $validated['plate_number'];
-            $pl_no->users()->save();
-
+            $pl_no->plate_number = $validated['plate_number'];
+            $pl_no->user_id = $user->id;
+            $pl_no->save();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
@@ -57,6 +57,15 @@ class UserController extends Controller
     }
 
     public function addPlateNumber(Request $request, $id){
+        if ($id == null){
+            return $this->error('No User', 'No User Selected', 401);
+        }
+
+        $user = User::find($id);
+
+        if (!$user){
+            return $this->error('User Not Found', 'No User Selected', 401);
+        }
 
         try{
             $validated = $request->validate([
@@ -65,7 +74,8 @@ class UserController extends Controller
 
             $pl_no = new PlateNo;
             $pl_no->plate_number = $validated['plate_number'];
-            $pl_no->users()->save();
+            $pl_no->user_id = $id;
+            $pl_no->save();
 
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Adding Plate Number', 401);
