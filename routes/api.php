@@ -22,11 +22,12 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::group(['prefix' => 'client'], function() {
         Route::post('register', 'ClientController@regiterClient');
-        Route::get('{id}', 'ClientController@getClient');
-        Route::get('login', 'ClientController@login');
+        Route::get('{id}', 'ClientController@getOneClient');
+        Route::get('/', 'ClientController@getAllClient');
     });
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
-        Route::get('login', 'UserController@login');
+        Route::get('login', 'UserController@userLogin');
+        Route::get('login', 'UserController@addPlateNumber');
     });
 });

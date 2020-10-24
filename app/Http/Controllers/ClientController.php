@@ -12,15 +12,7 @@ class ClientController extends Controller
 {
 
     use Response;
-
-    // public function __construct(){
-    //     $this->middleware('');
-    // }
-
-
-    public function clientLogin(){
-
-    }
+    public $token;
 
     public function regiterClient(Request $request){
         try{
@@ -43,7 +35,8 @@ class ClientController extends Controller
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
             $client->token = Str::random(50);
-            $token = $client->token;
+            $client->url = env('APP_URL').$client->token;
+            $this->token = $client->token;
             $client->save();
 
 
@@ -54,8 +47,15 @@ class ClientController extends Controller
         return $this->success($client, 'Client Registeration Success', 201);
     }
 
-    public function getClient($url){
+
+    public function getOneClient($url){
         $client = Client::where('token', $url)->first();
         return $this->success($client, 'Client Fetched', 200);
+    }
+
+
+    public function getAllClients(){
+        $clients = Client::all();
+        return $this->success($clients, 'All Clients Fetched', 200);
     }
 }

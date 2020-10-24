@@ -17,7 +17,7 @@ class CreatePlateNosTable extends Migration
             $table->id();
             $table->string('plate_number');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->reference('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
