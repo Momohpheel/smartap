@@ -36,7 +36,6 @@ class ClientController extends Controller
             $client->description = $validated['description'];
             $client->token = Str::random(50);
             $client->url = env('APP_URL').$client->token;
-            $this->token = $client->token;
             $client->save();
 
 

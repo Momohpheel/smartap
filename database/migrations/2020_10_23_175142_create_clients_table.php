@@ -19,6 +19,7 @@ class CreateClientsTable extends Migration
             $table->string('token', 80)->unique()->nullable()->default(null);
             $table->string('address');
             $table->string('geolocation');
+            $table->string('url');
             $table->string('state');
             $table->string('lga');
             $table->string('description');

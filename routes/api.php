@@ -28,6 +28,6 @@ Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::get('login', 'UserController@userLogin');
-        Route::get('login', 'UserController@addPlateNumber');
+        Route::get('plate/add', 'UserController@addPlateNumber');
     });
 });
