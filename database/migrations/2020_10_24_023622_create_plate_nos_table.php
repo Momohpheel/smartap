@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreatePlateNosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('plate_nos', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('phone_number')->nullable();
-            $table->timestamp('phone_verified_at')->nullable();
-            $table->string('geolocation');
-            $table->boolean('is_active')->default(false);
+            $table->string('plate_number');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->reference('id')->on('users');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('plate_nos');
     }
 }

@@ -29,4 +29,8 @@ class User extends Authenticatable
     protected $casts = [
         'phone_verified_at' => 'datetime',
     ];
+
+    public function plates(){
+        return $this->hasMany(User::class);
+    }
 }
