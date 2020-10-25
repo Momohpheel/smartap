@@ -19,8 +19,8 @@ class ClientController extends Controller
             $validated = $request->validate([
                 'company_name' => 'required|string',
                 'address' => 'required|string',
-                'lat' => 'required|string',
-                'long' => 'required|string',
+                'latitude' => 'required|string',
+                'longitude' => 'required|string',
                 'state' => 'required|string',
                 'lga' => 'required|string',
                 'description' => 'required|string',
@@ -38,8 +38,8 @@ class ClientController extends Controller
             $client = new Client;
             $client->company_name = $validated['company_name'];
             $client->address = $validated['address'];
-            $client->long = $validated['long'];
-            $client->lat = $validated['lat'];
+            $client->long = $validated['longitude'];
+            $client->lat = $validated['latitude'];
             $client->state = $validated['state'];
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
