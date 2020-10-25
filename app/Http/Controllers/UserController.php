@@ -82,27 +82,27 @@ class UserController extends Controller
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
         }
-            return $this->success($user, 'Plate Numbers Retrieved', 200);
+            return $this->success($plate_number, 'Plate Numbers Retrieved', 200);
     }
 
 
     public function ExistingEnterPark($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = true;
-        return $this->success($user, 'Plate Numbers Added to Active parkers', 200);
+        return $this->success([], 'Plate Numbers Added to Active parkers', 200);
     }
 
 
     public function exitPark($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = false;
-        return $this->success($user, 'Plate Numbers Removed from Active parkers', 200);
+        return $this->success([], 'Plate Numbers Removed from Active parkers', 200);
     }
 
     public function removePlateNumber($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->delete();
-        return $this->success($user, 'Plate Numbers Deleted', 200);
+        return $this->success([], 'Plate Numbers Deleted', 200);
     }
 
     public function verifyPhone($phone_number){
