@@ -68,7 +68,7 @@ class UserController extends Controller
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
 
-        return $this->success([$user, $pl_no], 'User Profile Updated', 201);
+        return $this->success($user, 'User Profile Updated', 201);
     }
 
     public function addPlateNumber(Request $request, $id){
