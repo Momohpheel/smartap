@@ -32,7 +32,7 @@ class UserController extends Controller
             $user->phone_number = $validated['phone_number'];
             $user->name = $validated['name'];
             $user->geolocation = $validated['geolocation'];
-            $user->password = md5($data['password']);
+            $user->password = md5($validated['password']);
             $user->save();
 
             $pl_no = new PlateNo;
