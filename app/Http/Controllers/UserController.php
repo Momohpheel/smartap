@@ -28,7 +28,7 @@ class UserController extends Controller
             ]);
 
             $user = new User;
-            $user->email = $validated['email'];
+
             $user->phone_number = $validated['phone_number'];
             $user->name = $validated['name'];
             $user->geolocation = $validated['geolocation'];
