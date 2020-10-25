@@ -56,7 +56,7 @@ class UserController extends Controller
                 'state' => 'string',
             ]);
 
-            $user = User::where('user_id', $id)->first();
+            $user = User::where('id', $id)->first();
 
             $user->name = $validated['name'];
             $user->email = $validated['email'];
