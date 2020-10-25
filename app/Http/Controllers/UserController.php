@@ -21,30 +21,54 @@ class UserController extends Controller
             $validated = $request->validate([
 
                 'phone_number' => 'required|string',
-                'name' => 'required|string',
-                'geolocation' => 'required|string',
-                'plate_number' => 'required|string',
+                // 'plate_number' => 'required|string',
                 'password' => 'required|string|min:8',
             ]);
 
-            $user = new User;
+            $phone = User::where('phone_number', $validated['phone_number'])->first();
 
-            $user->phone_number = $validated['phone_number'];
+            if (!$phone){
+                $user = new User;
+                $user->phone_number = $validated['phone_number'];
+                $user->password = md5($validated['password']);
+                $user->save();
+            }else{
+                return $this->error([], 'Phone Number Exists', 404);
+            }
+            // $pl_no = new PlateNo;
+            // $pl_no->plate_number = $validated['plate_number'];
+            // $pl_no->user_id = $user->id;
+            // $pl_no->is_active = true;
+            // $pl_no->save();
+        }catch(Exception $e){
+            return $this->error($e->getMessage(), 'Error Registering User', 401);
+        }
+        return $this->success($user, 'User Registeration Success', 201);
+    }
+
+    public function userProfile(Request $request, $id){
+        try{
+           $validated = $request->validate([
+                'name' => 'string',
+                'email' => 'string',
+                'address' => 'string',
+                'city' => 'string',
+                'state' => 'string',
+            ]);
+
+            $user = User::where('user_id', $id)->first();
+
             $user->name = $validated['name'];
-            $user->geolocation = $validated['geolocation'];
-            $user->password = md5($validated['password']);
+            $user->email = $validated['email'];
+            $user->address = $validated['address'];
+            $user->city = $validated['city'];
+            $user->state = $validated['state'];
             $user->save();
-
-            $pl_no = new PlateNo;
-            $pl_no->plate_number = $validated['plate_number'];
-            $pl_no->user_id = $user->id;
-            $pl_no->is_active = true;
-            $pl_no->save();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
 
-        return $this->success([$user, $pl_no], 'User Registeration Success', 201);
+        return $this->success([$user, $pl_no], 'User Profile Updated', 201);
     }
 
     public function addPlateNumber(Request $request, $id){
@@ -62,12 +86,16 @@ class UserController extends Controller
             $validated = $request->validate([
                 'plate_number' => 'required|string'
             ]);
+            $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $id)->first();
 
-            $pl_no = new PlateNo;
-            $pl_no->plate_number = $validated['plate_number'];
-            $pl_no->user_id = $id;
-            $pl_no->save();
-
+            if (!$plate){
+                $pl_no = new PlateNo;
+                $pl_no->plate_number = $validated['plate_number'];
+                $pl_no->user_id = $id;
+                $pl_no->save();
+            }else{
+                return $this->error([], 'Plate Number Exists already', 401);
+            }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Adding Plate Number', 401);
         }
