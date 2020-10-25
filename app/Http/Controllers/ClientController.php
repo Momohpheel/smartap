@@ -37,7 +37,8 @@ class ClientController extends Controller
             $client = new Client;
             $client->company_name = $validated['company_name'];
             $client->address = $validated['address'];
-            $client->geolocation = $validated['geolocation'];
+            $client->long = $validated['long'];
+            $client->lat = $validated['lat'];
             $client->state = $validated['state'];
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
@@ -58,7 +59,7 @@ class ClientController extends Controller
 
     public function getOneClient($url){
         $client = Client::where('token', $url)->first();
-        return $this->success($cleint, 'Client Fetched', 200);
+        return $this->success($client, 'Client Fetched', 200);
     }
 
 
@@ -72,7 +73,6 @@ class ClientController extends Controller
         $user = User::where('id', $pl->id)->first();
         $details = [
             'name' => $user->name,
-            'geolocation' => $user->geolocation,
             'email' => $user->email,
             'phone_number' => $user->phone_number,
         ];

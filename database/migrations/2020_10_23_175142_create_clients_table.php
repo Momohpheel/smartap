@@ -18,7 +18,8 @@ class CreateClientsTable extends Migration
             $table->string('company_name');
             $table->string('token', 80)->unique()->nullable()->default(null);
             $table->string('address');
-            $table->string('geolocation');
+            $table->string('long');
+            $table->string('lat');
             $table->string('url');
             $table->string('logo');
             $table->string('state');
