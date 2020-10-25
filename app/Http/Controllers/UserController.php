@@ -78,11 +78,11 @@ class UserController extends Controller
     public function getPlateNumbers($phone_number){
         try{
             $user_id = User::where('phone_number', $phone_number)->first();
-            $plate_numbers = PlateNo::where('user_id', $user_id)->get();
+            $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
         }
-            return $this->success($plate_number, 'Plate Numbers Retrieved', 200);
+            return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
     }
 
 
