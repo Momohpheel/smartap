@@ -105,4 +105,8 @@ class UserController extends Controller
         return $this->success($user, 'Plate Numbers Deleted', 200);
     }
 
+    public function verifyPhone($phone_number){
+        //
+    }
+
 }
