@@ -43,7 +43,7 @@ class UserController extends Controller
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
-        return $this->success($user, 'User Registeration Success', 201);
+        return $this->success([$user, $pl_no], 'User Registeration Success', 201);
     }
 
     public function userProfile(Request $request, $id){
