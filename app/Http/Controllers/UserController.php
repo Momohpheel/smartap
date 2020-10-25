@@ -21,7 +21,7 @@ class UserController extends Controller
             $validated = $request->validate([
 
                 'phone_number' => 'required|string',
-                // 'plate_number' => 'required|string',
+                'plate_number' => 'required|string',
                 'password' => 'required|string|min:8',
             ]);
 
@@ -35,11 +35,11 @@ class UserController extends Controller
             }else{
                 return $this->error([], 'Phone Number Exists', 404);
             }
-            // $pl_no = new PlateNo;
-            // $pl_no->plate_number = $validated['plate_number'];
-            // $pl_no->user_id = $user->id;
-            // $pl_no->is_active = true;
-            // $pl_no->save();
+            $pl_no = new PlateNo;
+            $pl_no->plate_number = $validated['plate_number'];
+            $pl_no->user_id = $user->id;
+            $pl_no->is_active = true;
+            $pl_no->save();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
