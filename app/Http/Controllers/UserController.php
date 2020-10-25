@@ -38,6 +38,7 @@ class UserController extends Controller
             $pl_no = new PlateNo;
             $pl_no->plate_number = $validated['plate_number'];
             $pl_no->user_id = $user->id;
+            $pl_no->is_active = true;
             $pl_no->save();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
@@ -82,6 +83,20 @@ class UserController extends Controller
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
         }
             return $this->success($user, 'Plate Numbers Retrieved', 200);
+    }
+
+
+    public function ExistingEnterPark($plate_number){
+        $plate_number = PlateNo::where('plate_number', $plate_number)->first();
+        $plate_number->is_active = true;
+        return $this->success($user, 'Plate Numbers Added to Active parkers', 200);
+    }
+
+
+    public function exitPark($plate_number){
+        $plate_number = PlateNo::where('plate_number', $plate_number)->first();
+        $plate_number->is_active = false;
+        return $this->success($user, 'Plate Numbers Removed from Active parkers', 200);
     }
 
     public function removePlateNumber($plate_number){

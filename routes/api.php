@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function() {
     //Auth::routes();
     Route::group(['prefix' => 'client'], function() {
-        Route::post('register', 'ClientController@regiterClient');
+        Route::post('register', 'ClientController@registerClient');
         Route::get('{id}', 'ClientController@getOneClient');
         Route::get('/', 'ClientController@getAllClients');
     });

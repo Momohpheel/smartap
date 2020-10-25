@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('geolocation');
             $table->string('password');
-            $table->boolean('is_active')->default(false);
+
             $table->timestamps();
         });
     }

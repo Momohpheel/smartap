@@ -18,6 +18,7 @@ class CreatePlateNosTable extends Migration
             $table->string('plate_number');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
