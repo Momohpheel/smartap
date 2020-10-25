@@ -57,14 +57,16 @@ class UserController extends Controller
             ]);
 
             $user = User::where('id', $id)->first();
-
+            if ($user){
             $user->name = $validated['name'];
             $user->email = $validated['email'];
             $user->address = $validated['address'];
             $user->city = $validated['city'];
             $user->state = $validated['state'];
             $user->save();
-
+            }else{
+                return $this->error($e->getMessage(), 'User not found ', 401);
+            }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
