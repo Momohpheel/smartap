@@ -22,7 +22,6 @@ Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'client'], function() {
         Route::post('register', 'ClientController@registerClient');
         Route::get('{id}', 'ClientController@getOneClient');
-        Route::get('/', 'ClientController@getAllClients');//->middleware('auth:client');
         Route::get('/active', 'ClientController@getAllActiceMembers');//->middleware('auth:client');
         Route::get('/{plate_number}', 'ClientController@getUserDetails');//->middleware('auth:client');
 
@@ -32,9 +31,9 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::post('login', 'Auth\LoginController@userLogin');
         Route::post('plate/{id}/add', 'UserController@addPlateNumber');//->middleware('auth:api');
-        Route::post('plates', 'UserController@getPlateNumbers');//->middleware('auth:api');
-        Route::post('enter', 'UserController@ExistingEnterPark');//->middleware('auth:api');
-        Route::post('exit', 'UserController@exitPark');//->middleware('auth:api');
+        Route::post('plates/{plate}', 'UserController@getPlateNumbers');//->middleware('auth:api');
+        Route::post('enter/{plate}', 'UserController@ExistingEnterPark');//->middleware('auth:api');
+        Route::post('exit/{plate}', 'UserController@exitPark');//->middleware('auth:api');
         Route::post('plate/delete/{plate}', 'UserController@removePlateNumber');//->middleware('auth:api');
     });
 });
