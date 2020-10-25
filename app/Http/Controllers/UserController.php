@@ -64,6 +64,7 @@ class UserController extends Controller
             $user->city = $validated['city'];
             $user->state = $validated['state'];
             $user->save();
+
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
