@@ -13,29 +13,18 @@ class UserController extends Controller
 
     use Response;
 
-    public function userLogin(Request $request){
-        $validated = $request->validate([
-            'phone_number' => 'string',
-            'plate_number' => 'string',
-        ]);
 
-        $user = User::where('phone_number', $validated['phone_number'])->where('plate_number', $validated['plate_number'])->first();
-        if ($user != null){
-            return $this->success($user, 'User Login Success', 200);
-        }else{
-            return $this->error($e->getMessage(), 'User Login Failure', 401);
-        }
-    }
 
     public function registerUser(Request $request){
         try{
 
             $validated = $request->validate([
-                'email' => 'required|email',
+                'password' => 'required|string',
                 'phone_number' => 'required|string',
                 'name' => 'required|string',
                 'geolocation' => 'required|string',
-                'plate_number' => 'required|string'
+                'plate_number' => 'required|string',
+                'password' => 'required|string|min:8|confirmed',
             ]);
 
             $user = new User;
@@ -43,6 +32,7 @@ class UserController extends Controller
             $user->phone_number = $validated['phone_number'];
             $user->name = $validated['name'];
             $user->geolocation = $validated['geolocation'];
+            $user->password = md5($data['password']);
             $user->save();
 
             $pl_no = new PlateNo;

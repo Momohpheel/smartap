@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'], function() {
-
+    //Auth::routes();
     Route::group(['prefix' => 'client'], function() {
         Route::post('register', 'ClientController@regiterClient');
         Route::get('{id}', 'ClientController@getOneClient');
@@ -27,7 +27,7 @@ Route::group(['prefix' => 'v1'], function() {
     });
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
-        Route::get('login', 'UserController@userLogin');
+        Route::post('login', 'Auth\LoginController@userLogin');
         Route::post('plate/{id}/add', 'UserController@addPlateNumber');
     });
 });

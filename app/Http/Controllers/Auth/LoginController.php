@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request;
+use App\Model\Client;
+use App\Model\User;
 class LoginController extends Controller
 {
     /*
@@ -39,4 +41,31 @@ class LoginController extends Controller
     }
 
 
+    public function userLogin(Request $request){
+        $validated = $request->validate([
+            'phone_number' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
+        if ($user != null){
+            return $this->success($user, 'Success', 200);
+        }else{
+            return $this->error([], 'User Login Failure', 404);
+        }
+    }
+
+    public function clientLogin(Request $request){
+        $validated = $request->validate([
+            'phone_number' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $user = Client::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
+        if ($user != null){
+            return $this->success($user, 'Success', 200);
+        }else{
+            return $this->error([], 'Client Login Failure', 404);
+        }
+    }
 }

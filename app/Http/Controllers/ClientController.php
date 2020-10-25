@@ -25,6 +25,7 @@ class ClientController extends Controller
                 'lga' => 'required|string',
                 'description' => 'required|string',
                 'subscription_plan' => 'required|string',
+
             ]);
 
             $client = new Client;
@@ -49,8 +50,8 @@ class ClientController extends Controller
 
 
     public function getOneClient($url){
-        //$client = Client::where('token', $url)->first();
-        return $this->success(1, 'Client Fetched', 200);
+        $client = Client::where('token', $url)->first();
+        return $this->success($cleint, 'Client Fetched', 200);
     }
 
 
