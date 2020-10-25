@@ -28,13 +28,13 @@ class ClientController extends Controller
                 // 'logo' => 'required|image|max:2000|mimes:jpeg,jpg,png'
             ]);
 
-            if ($request->hasFile('logo')){
-                $name = $request->file('logo')->getClientOriginalName();
-                $ext = $request->file('logo')->getClientOriginalExtension();
-                $name_without_ext = pathinfo($name, PATHINFO_FILENAME);
+            // if ($request->hasFile('logo')){
+            //     $name = $request->file('logo')->getClientOriginalName();
+            //     $ext = $request->file('logo')->getClientOriginalExtension();
+            //     $name_without_ext = pathinfo($name, PATHINFO_FILENAME);
 
 
-            }
+            // }
             $client = new Client;
             $client->company_name = $validated['company_name'];
             $client->address = $validated['address'];
