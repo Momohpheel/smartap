@@ -24,7 +24,7 @@ class UserController extends Controller
                 'name' => 'required|string',
                 'geolocation' => 'required|string',
                 'plate_number' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => 'required|string|min:8',
             ]);
 
             $user = new User;
