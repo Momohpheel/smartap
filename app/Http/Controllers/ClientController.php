@@ -19,7 +19,8 @@ class ClientController extends Controller
             $validated = $request->validate([
                 'company_name' => 'required|string',
                 'address' => 'required|string',
-                'geolocation' => 'required|string',
+                'lat' => 'required|string',
+                'long' => 'required|string',
                 'state' => 'required|string',
                 'lga' => 'required|string',
                 'description' => 'required|string',
