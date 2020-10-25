@@ -18,8 +18,8 @@ class ClientController extends Controller
         try{
             $validated = $request->validate([
                 'company_name' => 'required|string',
-                'address' => 'required|string',
-                'latitude' => 'required|string',
+                'address' => 'required|numeric',
+                'latitude' => 'required|numeric',
                 'longitude' => 'required|string',
                 'state' => 'required|string',
                 'lga' => 'required|string',
