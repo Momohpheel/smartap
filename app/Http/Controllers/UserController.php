@@ -84,4 +84,20 @@ class UserController extends Controller
         return $this->success($user, 'Plate Number Added', 201);
     }
 
+    public function getPlateNumbers($phone_number){
+        try{
+            $user_id = User::where('phone_number', $phone_number)->first();
+            $plate_numbers = PlateNo::where('user_id', $user_id)->get();
+        }catch(Exception $e){
+            return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
+        }
+            return $this->success($user, 'Plate Numbers Retrieved', 200);
+    }
+
+    public function removePlateNumber($plate_number){
+        $plate_number = PlateNo::where('plate_number', $plate_number)->first();
+        $plate_number->delete();
+        return $this->success($user, 'Plate Numbers Deleted', 200);
+    }
+
 }

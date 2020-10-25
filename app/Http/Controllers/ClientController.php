@@ -36,7 +36,7 @@ class ClientController extends Controller
             $client->description = $validated['description'];
             $client->subscription_plan = $validated['subscription_plan'];
             $client->token = Str::random(50);
-            $client->url = env('APP_URL').'/'.$client->token;
+            $client->url = env('APP_URL').'api/v1/client/'.$client->token;
             $client->save();
 
 
@@ -49,8 +49,8 @@ class ClientController extends Controller
 
 
     public function getOneClient($url){
-        $client = Client::where('token', $url)->first();
-        return $this->success($client, 'Client Fetched', 200);
+        //$client = Client::where('token', $url)->first();
+        return $this->success(1, 'Client Fetched', 200);
     }
 
 
