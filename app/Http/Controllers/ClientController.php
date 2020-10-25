@@ -25,7 +25,7 @@ class ClientController extends Controller
                 'lga' => 'required|string',
                 'description' => 'required|string',
                 'subscription_plan' => 'required|string',
-                'logo' => 'required|image|max:2000|mimes:jpeg,jpg,png'
+                // 'logo' => 'required|image|max:2000|mimes:jpeg,jpg,png'
             ]);
 
             if ($request->hasFile('logo')){
@@ -46,7 +46,7 @@ class ClientController extends Controller
             $client->subscription_plan = $validated['subscription_plan'];
             $client->token = Str::random(50);
             $client->url = env('APP_URL').'api/v1/client/'.$client->token;
-            $client->logo = "";
+            // $client->logo = "";
             $client->save();
 
 
