@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Model\Client;
 use App\Model\User;
+use App\Traits\Response;
 class LoginController extends Controller
 {
     /*
@@ -21,7 +22,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers, Response;
 
     /**
      * Where to redirect users after login.

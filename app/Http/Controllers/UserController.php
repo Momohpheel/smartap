@@ -19,7 +19,7 @@ class UserController extends Controller
         try{
 
             $validated = $request->validate([
-                'password' => 'required|string',
+
                 'phone_number' => 'required|string',
                 'name' => 'required|string',
                 'geolocation' => 'required|string',
