@@ -89,6 +89,7 @@ class UserController extends Controller
     public function ExistingEnterPark($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = true;
+        $plate_number->save();
         return $this->success([], 'Plate Numbers Added to Active parkers', 200);
     }
 
@@ -96,6 +97,7 @@ class UserController extends Controller
     public function exitPark($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = false;
+        $plate_number->save();
         return $this->success([], 'Plate Numbers Removed from Active parkers', 200);
     }
 
