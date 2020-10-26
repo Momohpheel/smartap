@@ -20,7 +20,6 @@ class CreateClientsTable extends Migration
             $table->string('address');
             $table->string('long');
             $table->string('lat');
-            $table->string('url');
             $table->string('logo')->nullable();
             $table->string('state');
             $table->string('lga');
