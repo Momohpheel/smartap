@@ -26,7 +26,6 @@ class CreateClientsTable extends Migration
             $table->string('lga');
             $table->string('description');
             $table->string('subscription_plan');
-
             $table->timestamps();
         });
     }

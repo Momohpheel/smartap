@@ -44,8 +44,8 @@ class ClientController extends Controller
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
             $client->subscription_plan = $validated['subscription_plan'];
-            $client->token = Str::random(50);
-            $client->url = env('APP_URL').'api/v1/client/'.$client->token;
+            $client->token = $this->token();
+            //$client->url = env('APP_URL').'api/v1/client/'.$client->token;
             // $client->logo = "";
             $client->save();
 
@@ -80,4 +80,23 @@ class ClientController extends Controller
 
         return $this->success($details, 'Member Details Fetched', 200);
     }
+
+    function token() {
+        $text = '';
+        $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        for ($i = 0; $i<12; $i++) {
+            $random_number = rand(1, strlen($possible));
+            $text = $text.substr($possible, $random_number, 1);
+            // str_replace(array('[',']'), '',
+            $clrStr = str_replace(array('-'), '', $text);
+            if(strlen($clrStr)%4 == 0) $text = $text.'-';
+        }
+        return strtolower(rtrim($text, "- "));
+    }
+
+
+
 }
+
+
