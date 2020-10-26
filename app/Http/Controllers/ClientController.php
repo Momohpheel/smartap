@@ -81,7 +81,7 @@ class ClientController extends Controller
         return $this->success($details, 'Member Details Fetched', 200);
     }
 
-    function token() {
+    public function token() {
         $text = '';
         $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
