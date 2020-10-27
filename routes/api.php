@@ -30,10 +30,10 @@ Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::post('login', 'Auth\LoginController@userLogin');
-        Route::post('profile/{id}', 'UserController@userProfile');
-        Route::post('vehicle/{id}', 'UserController@vehicleRegisteration');
-        Route::post('vehicle/{id}/add', 'UserController@addPlateNumber');//->middleware('auth:api');
-        Route::get('vehicles/{plate}', 'UserController@getPlateNumbers');//->middleware('auth:api');
+        Route::post('profile', 'UserController@userProfile');
+        Route::post('vehicle', 'UserController@vehicleRegisteration');
+        Route::post('vehicle/add', 'UserController@addPlateNumber');//->middleware('auth:api');
+        Route::get('vehicles', 'UserController@getPlateNumbers');//->middleware('auth:api');
         Route::post('enter/{plate}', 'UserController@ExistingEnterPark');//->middleware('auth:api');
         Route::post('exit/{plate}', 'UserController@exitPark');//->middleware('auth:api');
         Route::post('vehicle/delete/{plate}', 'UserController@removePlateNumber');//->middleware('auth:api');

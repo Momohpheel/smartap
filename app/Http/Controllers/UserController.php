@@ -48,39 +48,41 @@ class UserController extends Controller
         return $this->success($user, 'User Registeration Success', 201);
     }
 
-    public function userProfile(Request $request, $token){
+    public function userProfile(Request $request){
         try{
-           $validated = $request->validate([
-                'email' => 'string',
-                'address' => 'string',
-                'city' => 'string',
-                'state' => 'string',
-            ]);
+            $validated = $request->validate([
+                    'email' => 'string',
+                    'address' => 'string',
+                    'city' => 'string',
+                    'state' => 'string',
+                ]);
 
-            $user = User::where('token', $token)->first();
-            if ($user){
-            $user->email = $validated['email'];
-            $user->address = $validated['address'];
-            $user->city = $validated['city'];
-            $user->state = $validated['state'];
-            $user->save();
-            }else{
-                return $this->error($e->getMessage(), 'User not found ', 401);
-            }
+                $header = $request->header('Authorization');
+
+                $user = User::where('token', $token)->first();
+                if ($user){
+                    if ($header == $user->token){
+                        $user->email = $validated['email'];
+                        $user->address = $validated['address'];
+                        $user->city = $validated['city'];
+                        $user->state = $validated['state'];
+                        $user->save();
+                        return $this->success($user, 'User Profile Updated', 201);
+                    }else{
+                        return $this->error([], 'User not found', 404);
+                    }
+                }else{
+                    return $this->error([], 'User not found ', 401);
+                }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
 
-        return $this->success($user, 'User Profile Updated', 201);
     }
 
-    public function addPlateNumber(Request $request, $token){
-        if ($token == null){
-            return $this->error('No User', 'No User Selected', 401);
-        }
-
-        $user = User::where('token', $token)->first();
-
+    public function addPlateNumber(Request $request){
+        $header = $request->header('Authorization');
+        $user = User::where('token', $header)->first();
         if (!$user){
             return $this->error('User Not Found', 'No User Selected', 401);
         }
@@ -112,9 +114,10 @@ class UserController extends Controller
         return $this->success($pl_no, 'Plate Number Added', 201);
     }
 
-    public function getPlateNumbers($token){
+    public function getPlateNumbers(){
         try{
-            $user_id = User::where('token', $token)->first();
+            $header = $request->header('Authorization');
+            $user_id = User::where('token', $header)->first();
             $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
@@ -144,13 +147,11 @@ class UserController extends Controller
         return $this->success([], 'Plate Numbers Deleted', 200);
     }
 
-    public function vehicleRegisteration(Request $request, $id){
+    public function vehicleRegisteration(Request $request){
 
-        if ($id == null){
-            return $this->error('No User', 'No User Selected', 401);
-        }
 
-        $user = User::where('token', $token)->first();
+        $header = $request->header('Authorization');
+        $user = User::where('token', $header)->first();
 
         if (!$user){
             return $this->error('User Not Found', 'No User Selected', 401);
