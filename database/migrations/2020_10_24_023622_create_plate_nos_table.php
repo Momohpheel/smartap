@@ -16,9 +16,9 @@ class CreatePlateNosTable extends Migration
         Schema::create('plate_nos', function (Blueprint $table) {
             $table->id();
             $table->string('plate_number');
-            $table->string('color');
-            $table->string('brand');
-            $table->string('type');
+            $table->string('color')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('type')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(false);

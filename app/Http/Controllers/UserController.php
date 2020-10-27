@@ -86,13 +86,19 @@ class UserController extends Controller
 
         try{
             $validated = $request->validate([
-                'plate_number' => 'required|string'
+                'plate_number' => 'required|string',
+                'type' => 'string',
+                 'brand' => 'string',
+                 'color' => 'string',
             ]);
             $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $id)->first();
 
             if (!$plate){
                 $pl_no = new PlateNo;
                 $pl_no->plate_number = $validated['plate_number'];
+                $pl_no->type = $validated['type'];
+                $pl_no->brand = $validated['brand'];
+                $pl_no->color = $validated['color'];
                 $pl_no->user_id = $id;
                 $pl_no->save();
             }else{
@@ -137,8 +143,39 @@ class UserController extends Controller
         return $this->success([], 'Plate Numbers Deleted', 200);
     }
 
-    public function verifyPhone($phone_number){
-        //
+    public function vehicleRegisteration(Request $request, $id){
+
+        if ($id == null){
+            return $this->error('No User', 'No User Selected', 401);
+        }
+
+        $user = User::find($id);
+
+        if (!$user){
+            return $this->error('User Not Found', 'No User Selected', 401);
+        }
+
+        try{
+            $validated = $request->validate([
+                 'plate_number' => 'required|string',
+                 'type' => 'string',
+                 'brand' => 'string',
+                 'color' => 'string',
+             ]);
+
+             $Plate = new PlateNo();
+             $Plate->plate_number = $validated['plate_number'];
+             $Plate->type = $validated['type'];
+             $Plate->brand = $validated['brand'];
+             $Plate->color = $validated['color'];
+             $Plate->user_id = $id;
+             $Plate->save();
+
+         }catch(Exception $e){
+             return $this->error($e->getMessage(), 'Error Registering Vehicle', 401);
+         }
+
+         return $this->success($Plate, 'Vehicle Added', 201);
     }
 
 }
