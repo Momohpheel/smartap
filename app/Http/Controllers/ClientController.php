@@ -59,8 +59,11 @@ class ClientController extends Controller
 
 
     public function getOneClient(Request $request){
-        $header = $request->header('Authorization');
-        $client = Client::where('token', $header)->first();
+        //$header = $request->header('Authorization');
+        $validated = $request->validate([
+            'token' => 'required|string',
+        ]);
+        $client = Client::where('token', $validated['token'])->first();
         if ($client){
             return $this->success($client, 'Client Fetched', 200);
         }
@@ -70,19 +73,33 @@ class ClientController extends Controller
 
     public function getAllActiceMembers(){
         $active_members = PlateNo::where('is_active', true)->get();
-        return $this->success($active_members, 'All Actice Members Fetched', 200);
+        if ($active_members){
+            return $this->success($active_members, 'All Actice Members Fetched', 200);
+        }else{
+            return $this->error([], 'No Actice Members Fetched', 400);
+        }
     }
 
     public function getUserDetails($plate){
         $pl = PlateNo::where('plate_number', $plate)->first();
-        $user = User::where('id', $pl->id)->first();
-        $details = [
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone_number' => $user->phone_number,
-        ];
+        if ($pl){
+            $user = User::where('id', $pl->id)->first();
+                if ($user){
+                    $details = [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'phone_number' => $user->phone_number,
+                    ];
 
-        return $this->success($details, 'Member Details Fetched', 200);
+                    return $this->success($details, 'Member Details Fetched', 200);
+                }else{
+                    return $this->error([], 'No User Found', 400);
+                }
+        }else{
+            return $this->error([], 'Plate Number Not Found', 400);
+        }
+
+
     }
 
     public function token() {
