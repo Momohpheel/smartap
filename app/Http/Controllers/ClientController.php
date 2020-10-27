@@ -61,7 +61,10 @@ class ClientController extends Controller
     public function getOneClient(Request $request){
         $header = $request->header('Authorization');
         $client = Client::where('token', $header)->first();
-        return $this->success($client, 'Client Fetched', 200);
+        if ($client){
+            return $this->success($client, 'Client Fetched', 200);
+        }
+        return $this->error([], 'No Client Found', 404);
     }
 
 
