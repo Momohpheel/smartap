@@ -48,7 +48,7 @@ class UserController extends Controller
         return $this->success($user, 'User Registeration Success', 201);
     }
 
-    public function userProfile(Request $request, $id){
+    public function userProfile(Request $request, $token){
         try{
            $validated = $request->validate([
                 'email' => 'string',
@@ -57,7 +57,7 @@ class UserController extends Controller
                 'state' => 'string',
             ]);
 
-            $user = User::where('id', $id)->first();
+            $user = User::where('token', $token)->first();
             if ($user){
             $user->email = $validated['email'];
             $user->address = $validated['address'];
@@ -74,12 +74,12 @@ class UserController extends Controller
         return $this->success($user, 'User Profile Updated', 201);
     }
 
-    public function addPlateNumber(Request $request, $id){
-        if ($id == null){
+    public function addPlateNumber(Request $request, $token){
+        if ($token == null){
             return $this->error('No User', 'No User Selected', 401);
         }
 
-        $user = User::find($id);
+        $user = User::where('token', $token)->first();
 
         if (!$user){
             return $this->error('User Not Found', 'No User Selected', 401);
@@ -100,7 +100,7 @@ class UserController extends Controller
                 $pl_no->type = $validated['type'];
                 $pl_no->brand = $validated['brand'];
                 $pl_no->color = $validated['color'];
-                $pl_no->user_id = $id;
+                $pl_no->user_id = $user->id;
                 $pl_no->save();
             }else{
                 return $this->error([], 'Plate Number Exists already', 401);
@@ -112,9 +112,9 @@ class UserController extends Controller
         return $this->success($pl_no, 'Plate Number Added', 201);
     }
 
-    public function getPlateNumbers($phone_number){
+    public function getPlateNumbers($token){
         try{
-            $user_id = User::where('phone_number', $phone_number)->first();
+            $user_id = User::where('token', $token)->first();
             $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
@@ -150,7 +150,7 @@ class UserController extends Controller
             return $this->error('No User', 'No User Selected', 401);
         }
 
-        $user = User::find($id);
+        $user = User::where('token', $token)->first();
 
         if (!$user){
             return $this->error('User Not Found', 'No User Selected', 401);
@@ -169,7 +169,7 @@ class UserController extends Controller
              $Plate->type = $validated['type'];
              $Plate->brand = $validated['brand'];
              $Plate->color = $validated['color'];
-             $Plate->user_id = $id;
+             $Plate->user_id = $user->id;
              $Plate->save();
 
          }catch(Exception $e){
