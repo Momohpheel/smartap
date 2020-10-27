@@ -94,7 +94,7 @@ class UserController extends Controller
                  'brand' => 'string',
                  'color' => 'string',
             ]);
-            $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $id)->first();
+            $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
 
             if (!$plate){
                 $pl_no = new PlateNo;
@@ -164,7 +164,9 @@ class UserController extends Controller
                  'brand' => 'string',
                  'color' => 'string',
              ]);
+             $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
 
+        if (!$plate){
              $Plate = new PlateNo();
              $Plate->plate_number = $validated['plate_number'];
              $Plate->type = $validated['type'];
@@ -172,7 +174,7 @@ class UserController extends Controller
              $Plate->color = $validated['color'];
              $Plate->user_id = $user->id;
              $Plate->save();
-
+            }
          }catch(Exception $e){
              return $this->error($e->getMessage(), 'Error Registering Vehicle', 401);
          }
