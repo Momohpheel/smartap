@@ -32,6 +32,7 @@ class UserController extends Controller
                 $user->phone_number = $validated['phone_number'];
                 $user->name = $validated['name'];
                 $user->password = md5($validated['password']);
+                $user->token = $this->token();
                 $user->save();
             }else{
                 return $this->error([], 'Phone Number Exists', 404);
@@ -177,5 +178,20 @@ class UserController extends Controller
 
          return $this->success($Plate, 'Vehicle Added', 201);
     }
+
+    public function token() {
+        $text = '';
+        $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        for ($i = 0; $i<12; $i++) {
+            $random_number = rand(1, strlen($possible));
+            $text = $text.substr($possible, $random_number, 1);
+            // str_replace(array('[',']'), '',
+            $clrStr = str_replace(array('-'), '', $text);
+            if(strlen($clrStr)%4 == 0) $text = $text.'-';
+        }
+        return strtolower(rtrim($text, "- "));
+    }
+
 
 }
