@@ -50,7 +50,11 @@ class LoginController extends Controller
 
         $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
         if ($user != null){
-            return $this->success($user, 'Success', 200);
+
+            $header = $request->header('Authorization');
+            if ($header == $user->token){
+                return $this->success($user, 'Success', 200);
+            }
         }else{
             return $this->error([], 'User Login Failure', 404);
         }
