@@ -59,7 +59,7 @@ class UserController extends Controller
 
                 $header = $request->header('Authorization');
 
-                $user = User::where('token', $token)->first();
+                $user = User::where('token', $header)->first();
                 if ($user){
                     if ($header == $user->token){
                         $user->email = $validated['email'];
@@ -114,7 +114,7 @@ class UserController extends Controller
         return $this->success($pl_no, 'Plate Number Added', 201);
     }
 
-    public function getPlateNumbers(){
+    public function getPlateNumbers(Request $request){
         try{
             $header = $request->header('Authorization');
             $user_id = User::where('token', $header)->first();
