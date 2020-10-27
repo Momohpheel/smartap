@@ -104,6 +104,8 @@ class UserController extends Controller
                 $pl_no->color = $validated['color'];
                 $pl_no->user_id = $user->id;
                 $pl_no->save();
+
+                return $this->success($pl_no, 'Plate Number Added', 201);
             }else{
                 return $this->error([], 'Plate Number Exists already', 401);
             }
@@ -111,18 +113,23 @@ class UserController extends Controller
             return $this->error($e->getMessage(), 'Error Adding Plate Number', 401);
         }
 
-        return $this->success($pl_no, 'Plate Number Added', 201);
+        
     }
 
     public function getPlateNumbers(Request $request){
         try{
             $header = $request->header('Authorization');
             $user_id = User::where('token', $header)->first();
-            $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
+            if ($user_id){
+                $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
+                return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
+            }else{
+                return $this->error([], 'User Not Found', 401);
+            }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
         }
-            return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
+
     }
 
 
@@ -164,9 +171,9 @@ class UserController extends Controller
                  'brand' => 'string',
                  'color' => 'string',
              ]);
-             $plate = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
+             $pla = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
 
-        if (!$plate){
+        if (!$pla){
              $Plate = new PlateNo();
              $Plate->plate_number = $validated['plate_number'];
              $Plate->type = $validated['type'];
@@ -174,12 +181,15 @@ class UserController extends Controller
              $Plate->color = $validated['color'];
              $Plate->user_id = $user->id;
              $Plate->save();
+             return $this->success($Plate, 'Vehicle Added', 201);
+        }else{
+                return $this->error([], 'Vehicle Exists', 401);
             }
          }catch(Exception $e){
              return $this->error($e->getMessage(), 'Error Registering Vehicle', 401);
          }
 
-         return $this->success($Plate, 'Vehicle Added', 201);
+
     }
 
     public function token() {
