@@ -113,7 +113,7 @@ class UserController extends Controller
             return $this->error($e->getMessage(), 'Error Adding Plate Number', 401);
         }
 
-        
+
     }
 
     public function getPlateNumbers(Request $request){
