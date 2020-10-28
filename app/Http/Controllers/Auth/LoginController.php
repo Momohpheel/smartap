@@ -49,7 +49,7 @@ class LoginController extends Controller
         $validated = $request->validate([
             'phone_number' => 'required|string',
             'password' => 'required|string',
-            'company_token' => 'required|string',
+            //'company_token' => 'required|string',
             'at_location' => 'boolean'
         ]);
 
