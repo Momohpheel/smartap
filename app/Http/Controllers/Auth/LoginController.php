@@ -95,13 +95,18 @@ class LoginController extends Controller
     }
 
     public function userLogout(){
-        $move = Movement::where('user_id', $user->id)->first();
-        if ($move){
-            $move->at_location = $validated['at_location'];
-            $move->logout_time = Carbon::now();
-            $move->save();
+
+        $header = $request->header('Authorization');
+        $user = User::where('token', $header)->first();
+        if ($user != null){
+            $move = Movement::where('user_id', $user->id)->first();
+            if ($move){
+                $move->at_location = $validated['at_location'];
+                $move->logout_time = Carbon::now();
+                $move->save();
+            }
+        }
     }
-}
 
     public function clientLogin(Request $request){
         $validated = $request->validate([
