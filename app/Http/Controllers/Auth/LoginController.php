@@ -66,6 +66,7 @@ class LoginController extends Controller
                     $move = new Movement();
                     $move->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
+                    $move->user_id = $user->id;
                     $move->save();
                 }
                 $data = [
