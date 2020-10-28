@@ -53,6 +53,9 @@ class LoginController extends Controller
         if ($user != null){
             $header = $request->header('Authorization');
             if ($header == $user->token){
+
+                $user->company_token = $validated['company_token'];
+                $user->save();
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
@@ -64,9 +67,6 @@ class LoginController extends Controller
                     "token"=> $user->token,
                     "company"=> $user->company_token,
                 ];
-
-                $user->company_token = $validated['company_token'];
-                $user->save();
 
                 return $this->success($data, 'Success', 200);
             }else{
