@@ -18,7 +18,7 @@ class CreateMovementsTable extends Migration
             $table->boolean('at_location');
             $table->timestamp('login_time')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->reference('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('logout_time')->nullable();
 
         });
