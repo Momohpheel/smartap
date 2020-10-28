@@ -22,6 +22,7 @@ class UserController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string',
                 'phone_number' => 'required|string',
+                'company_token' => 'required|string',
                 'password' => 'required|string|min:8',
             ]);
 
@@ -30,6 +31,7 @@ class UserController extends Controller
             if (!$phone){
                 $user = new User;
                 $user->phone_number = $validated['phone_number'];
+                $user->company_token = $validated['company_token'];
                 $user->name = $validated['name'];
                 $user->password = md5($validated['password']);
                 $user->token = $this->token();

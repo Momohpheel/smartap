@@ -59,12 +59,11 @@ class LoginController extends Controller
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
-                    "email"=> $user->email,
-                    "city"=> $user->city,
-                    "state"=> $user->state,
-                    "address"=> $user->address,
-                    "password"=> $user->password,
-                    "token"=> $user->token,
+                    // "email"=> $user->email,
+                    // "city"=> $user->city,
+                    // "state"=> $user->state,
+                    // "address"=> $user->address,
+                    // "token"=> $user->token,
                     "company"=> $user->company_token,
                 ];
 
