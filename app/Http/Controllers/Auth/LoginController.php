@@ -8,7 +8,10 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Model\Client;
 use App\Model\User;
+use App\Model\Movement;
 use App\Traits\Response;
+use Carbon\Carbon;
+
 class LoginController extends Controller
 {
     /*
@@ -54,8 +57,17 @@ class LoginController extends Controller
         if ($user != null){
             $header = $request->header('Authorization');
             if ($header == $user->token){
-                $user->at_location = $validated['at_location'];
-                $user->save();
+                $move = Movement::where('user_id', $user->id)->first();
+                if ($move){
+                    $move->at_location = $validated['at_location'];
+                    $move->login_time = new Carbon();
+                    $move->save();
+                }else{
+                    $move = new Movement();
+                    $move->at_location = $validated['at_location'];
+                    $move->login_time = new Carbon();
+                    $move->save();
+                }
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
@@ -75,6 +87,10 @@ class LoginController extends Controller
         }else{
             return $this->error(true, 'Phone Number or Password Incorrect', 400);
         }
+    }
+
+    public function userLogout(){
+
     }
 
     public function clientLogin(Request $request){
