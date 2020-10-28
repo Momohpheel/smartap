@@ -53,7 +53,7 @@ class LoginController extends Controller
             'at_location' => 'boolean'
         ]);
 
-        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->where('company_token', $validated['company_token'])->first();
+        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
         if ($user != null){
             $header = $request->header('Authorization');
             if ($header == $user->token){
