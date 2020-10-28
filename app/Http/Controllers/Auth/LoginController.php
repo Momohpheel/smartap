@@ -62,6 +62,7 @@ class LoginController extends Controller
                     "address"=> $user->address,
                     "password"=> $user->password,
                     "token"=> $user->token,
+                    "company"=> $user->company_token,
                 ];
 
                 $user->company_token = $validated['company_token'];
