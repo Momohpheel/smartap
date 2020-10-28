@@ -64,8 +64,20 @@ class ClientController extends Controller
             'token' => 'required|string',
         ]);
         $client = Client::where('token', $validated['token'])->first();
+
+        $data = [
+                'company_name' => $client->company_name,
+                'address' => $client->address,
+                'token' => $client->token,
+                'latitude' => $client->lat,
+                'longitude' => $client->long,
+                'state' => $client->state,
+                'lga' => $client->lga,
+                'subscription_plan' => $client->subscription_plan,
+        ];
+
         if ($client){
-            return $this->success($client, 'Client Fetched', 200);
+            return $this->success($data, 'Client Fetched', 200);
         }
         return $this->error([], 'No Client Found', 404);
     }
