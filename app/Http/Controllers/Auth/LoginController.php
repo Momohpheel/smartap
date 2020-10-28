@@ -82,7 +82,7 @@ class LoginController extends Controller
                     // "address"=> $user->address,
                     // "token"=> $user->token,
                     "company_token"=> $user->company_token,
-                    "at_location"=> $user->at_location,
+                    "at_location"=> $move->at_location,
                 ];
 
                 return $this->success($data, 'Success', 200);
