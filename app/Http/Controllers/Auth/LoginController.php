@@ -61,16 +61,18 @@ class LoginController extends Controller
                 if ($move){
                     $move->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
+                    $move->at_location = $validated['at_location'];
                     $move->save();
                 }else{
                     $move = new Movement();
                     $move->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
                     $move->user_id = $user->id;
+                    $move->at_location = $validated['at_location'];
                     $move->save();
                 }
-                $user->at_location = $validated['at_location'];
-                $user->save();
+
+
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
