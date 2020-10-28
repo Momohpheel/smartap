@@ -46,15 +46,15 @@ class LoginController extends Controller
         $validated = $request->validate([
             'phone_number' => 'required|string',
             'password' => 'required|string',
-            'company_token' => 'required|string'
+            'company_token' => 'required|string',
+            'at_location' => 'boolean'
         ]);
 
-        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
+        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->where('company_token', $validated['company_token'])->first();
         if ($user != null){
             $header = $request->header('Authorization');
             if ($header == $user->token){
-
-                $user->company_token = $validated['company_token'];
+                $user->at_location = $validated['at_location'];
                 $user->save();
                 $data = [
                     "name"=> $user->name,

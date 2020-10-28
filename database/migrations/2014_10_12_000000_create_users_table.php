@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('company_token')->nullable();
             $table->string('password');
             $table->string('token');
+            $table->boolean('at_location');
             $table->timestamp('login_time');
             $table->timestamps();
         });
