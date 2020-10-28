@@ -46,6 +46,7 @@ class LoginController extends Controller
         $validated = $request->validate([
             'phone_number' => 'required|string',
             'password' => 'required|string',
+            'company_token' => 'required|string'
         ]);
 
         $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
@@ -62,6 +63,10 @@ class LoginController extends Controller
                     "password"=> $user->password,
                     "token"=> $user->token,
                 ];
+
+                $user->company_token = $validated['company_token'];
+                $user->save();
+
                 return $this->success($data, 'Success', 200);
             }else{
                 return $this->error(true, 'this token is invalid', 400);
