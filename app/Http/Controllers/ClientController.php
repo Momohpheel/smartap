@@ -65,7 +65,10 @@ class ClientController extends Controller
         ]);
         $client = Client::where('token', $validated['token'])->first();
 
-        $data = [
+
+
+        if ($client){
+            $data = [
                 'company_name' => $client->company_name,
                 'address' => $client->address,
                 'token' => $client->token,
@@ -75,11 +78,9 @@ class ClientController extends Controller
                 'lga' => $client->lga,
                 'subscription_plan' => $client->subscription_plan,
         ];
-
-        if ($client){
             return $this->success($data, 'Client Fetched', 200);
         }
-        return $this->error([], 'No Client Found', 404);
+        return $this->error(true, 'this token is invalid', 400);
     }
 
 
@@ -88,7 +89,7 @@ class ClientController extends Controller
         if ($active_members){
             return $this->success($active_members, 'All Actice Members Fetched', 200);
         }else{
-            return $this->error([], 'No Actice Members Fetched', 400);
+            return $this->error(true, 'No Actice Members Fetched', 400);
         }
     }
 
@@ -105,10 +106,10 @@ class ClientController extends Controller
 
                     return $this->success($details, 'Member Details Fetched', 200);
                 }else{
-                    return $this->error([], 'No User Found', 400);
+                    return $this->error(true, 'No User Found', 400);
                 }
         }else{
-            return $this->error([], 'Plate Number Not Found', 400);
+            return $this->error(true, 'Plate Number Not Found', 400);
         }
 
 

@@ -52,12 +52,22 @@ class LoginController extends Controller
         if ($user != null){
             $header = $request->header('Authorization');
             if ($header == $user->token){
-                return $this->success($user, 'Success', 200);
+                $data = [
+                    "name"=> $user->name,
+                    "phone_number"=> $user->phone_number,
+                    "email"=> $user->email,
+                    "city"=> $user->city,
+                    "state"=> $user->state,
+                    "address"=> $user->address,
+                    "password"=> $user->password,
+                    "token"=> $user->token,
+                ];
+                return $this->success($data, 'Success', 200);
             }else{
-                return $this->error([], 'User Login Failure', 404);
+                return $this->error(true, 'this token is invalid', 400);
             }
         }else{
-            return $this->error([], 'User Login Failure', 404);
+            return $this->error(true, 'Phone Number or Password Incorrect', 400);
         }
     }
 
@@ -71,7 +81,7 @@ class LoginController extends Controller
         if ($user != null){
             return $this->success($user, 'Success', 200);
         }else{
-            return $this->error([], 'Client Login Failure', 404);
+            return $this->error([], 'Client Login Failure', 400);
         }
     }
 }

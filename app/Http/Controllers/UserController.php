@@ -35,7 +35,7 @@ class UserController extends Controller
                 $user->token = $this->token();
                 $user->save();
             }else{
-                return $this->error([], 'Phone Number Exists', 404);
+                return $this->error(true, 'Phone Number Exists', 400);
             }
             // $pl_no = new PlateNo;
             // $pl_no->plate_number = $validated['plate_number'];
@@ -69,10 +69,10 @@ class UserController extends Controller
                         $user->save();
                         return $this->success($user, 'User Profile Updated', 201);
                     }else{
-                        return $this->error([], 'User not found', 404);
+                        return $this->error(true, 'User not found', 404);
                     }
                 }else{
-                    return $this->error([], 'User not found ', 401);
+                    return $this->error(true, 'invalid token ', 400);
                 }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
@@ -84,7 +84,7 @@ class UserController extends Controller
         $header = $request->header('Authorization');
         $user = User::where('token', $header)->first();
         if (!$user){
-            return $this->error('User Not Found', 'No User Selected', 401);
+            return $this->error(true, 'invalid token', 400);
         }
 
         try{
@@ -107,7 +107,7 @@ class UserController extends Controller
 
                 return $this->success($pl_no, 'Plate Number Added', 201);
             }else{
-                return $this->error([], 'Plate Number Exists already', 401);
+                return $this->error(true, 'Plate Number Exists already', 401);
             }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Adding Plate Number', 401);
@@ -119,13 +119,19 @@ class UserController extends Controller
     public function getPlateNumbers(Request $request){
         try{
             $header = $request->header('Authorization');
-            $user_id = User::where('token', $header)->first();
-            if ($user_id){
-                $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
-                return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
+            if ($header){
+                $user_id = User::where('token', $header)->first();
+                if ($user_id){
+                    $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
+                    return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
+                }else{
+                    return $this->error(true, 'invalid token', 400);
+                }
+
             }else{
-                return $this->error([], 'User Not Found', 401);
+                return $this->error(true, 'No Token Found', 400);
             }
+
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
         }
@@ -137,7 +143,7 @@ class UserController extends Controller
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = true;
         $plate_number->save();
-        return $this->success([], 'Plate Numbers Added to Active parkers', 200);
+        return $this->success($plate_number, 'Plate Numbers Added to Active parkers', 200);
     }
 
 
@@ -145,13 +151,13 @@ class UserController extends Controller
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->is_active = false;
         $plate_number->save();
-        return $this->success([], 'Plate Numbers Removed from Active parkers', 200);
+        return $this->success($plate_number, 'Plate Numbers Removed from Active parkers', 200);
     }
 
     public function removePlateNumber($plate_number){
         $plate_number = PlateNo::where('plate_number', $plate_number)->first();
         $plate_number->delete();
-        return $this->success([], 'Plate Numbers Deleted', 200);
+        return $this->success($plate_number, 'Plate Numbers Deleted', 200);
     }
 
     public function vehicleRegisteration(Request $request){
@@ -161,7 +167,7 @@ class UserController extends Controller
         $user = User::where('token', $header)->first();
 
         if (!$user){
-            return $this->error('User Not Found', 'No User Selected', 401);
+            return $this->error(true, 'No User Found', 400);
         }
 
         try{
@@ -183,10 +189,10 @@ class UserController extends Controller
              $Plate->save();
              return $this->success($Plate, 'Vehicle Added', 201);
         }else{
-                return $this->error([], 'Vehicle Exists', 401);
+                return $this->error(true, 'Vehicle Exists', 400);
             }
          }catch(Exception $e){
-             return $this->error($e->getMessage(), 'Error Registering Vehicle', 401);
+             return $this->error($e->getMessage(), 'Error Registering Vehicle', 400);
          }
 
 
