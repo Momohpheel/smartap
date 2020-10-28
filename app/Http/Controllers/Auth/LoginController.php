@@ -69,6 +69,8 @@ class LoginController extends Controller
                     $move->user_id = $user->id;
                     $move->save();
                 }
+                $user->at_location = $validated['at_location'];
+                $user->save();
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
