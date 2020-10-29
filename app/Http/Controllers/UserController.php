@@ -126,9 +126,9 @@ class UserController extends Controller
                     return $this->error(true, 'invalid token', 400);
                 }
 
-            }else{
-                return $this->error(true, 'No Token Found', 400);
-            }
+            // }else{
+            //     return $this->error(true, 'No Token Found', 400);
+            // }
 
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Retrieving Plate Numbers', 401);
@@ -161,8 +161,8 @@ class UserController extends Controller
     public function vehicleRegisteration(Request $request){
 
 
-        $header = $request->header('Authorization');
-        $user = User::where('token', $header)->first();
+        // $header = $request->header('Authorization');
+        $user = User::where('id', auth()->user()->id)->first();
 
         if (!$user){
             return $this->error(true, 'No User Found', 400);
