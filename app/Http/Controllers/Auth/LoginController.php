@@ -55,9 +55,10 @@ class LoginController extends Controller
 
         $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
         if ($user != null){
-            $header = $request->header('Authorization');
-            if ($header == $user->token){
+            // $header = $request->header('Authorization');
+            // if ($header == $user->token){
                 $move = Movement::where('user_id', $user->id)->first();
+
                 if ($move){
                     $move->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
@@ -72,7 +73,7 @@ class LoginController extends Controller
                     $move->save();
                 }
 
-
+                $accessToken = $user->createToken('authToken')->accessToken;
                 $data = [
                     "name"=> $user->name,
                     "phone_number"=> $user->phone_number,
@@ -85,13 +86,11 @@ class LoginController extends Controller
                     "at_location"=> $move->at_location,
                 ];
 
-                return $this->success($data, 'Success', 200);
+                return $this->success([$data, $accessToken], 'Success', 200);
             }else{
-                return $this->error(true, 'this token is invalid', 400);
+                return $this->error(true, 'Phone Number or Password Incorrect', 400);
             }
-        }else{
-            return $this->error(true, 'Phone Number or Password Incorrect', 400);
-        }
+
     }
 
     public function userLogout(){

@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('company_token')->nullable();
             $table->string('password');
-            $table->string('token');
             $table->timestamps();
         });
     }

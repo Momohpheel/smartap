@@ -42,17 +42,17 @@ return [
         ],
 
         'api' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'users',
             'hash' => false,
         ],
         'client' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'client',
             'hash' => false,
         ],
         'admin' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
             'hash' => false,
         ],

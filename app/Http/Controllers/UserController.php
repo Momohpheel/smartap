@@ -34,20 +34,16 @@ class UserController extends Controller
                 $user->company_token = $validated['company_token'];
                 $user->name = $validated['name'];
                 $user->password = md5($validated['password']);
-                $user->token = $this->token();
+                $accessToken = $user->createToken('authToken')->accessToken;
                 $user->save();
             }else{
                 return $this->error(true, 'Phone Number Exists', 400);
             }
-            // $pl_no = new PlateNo;
-            // $pl_no->plate_number = $validated['plate_number'];
-            // $pl_no->user_id = $user->id;
-            // $pl_no->is_active = true;
-            // $pl_no->save();
+
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
-        return $this->success($user, 'User Registeration Success', 201);
+        return $this->success([$user, $accessToken], 'User Registeration Success', 201);
     }
 
     public function userProfile(Request $request){
@@ -83,8 +79,8 @@ class UserController extends Controller
     }
 
     public function addPlateNumber(Request $request){
-        $header = $request->header('Authorization');
-        $user = User::where('token', $header)->first();
+        // $header = $request->header('Authorization');
+        $user = User::where('id', auth()->user()->id)->first();
         if (!$user){
             return $this->error(true, 'invalid token', 400);
         }
@@ -120,9 +116,9 @@ class UserController extends Controller
 
     public function getPlateNumbers(Request $request){
         try{
-            $header = $request->header('Authorization');
-            if ($header){
-                $user_id = User::where('token', $header)->first();
+            // $header = $request->header('Authorization');
+            // if ($header){
+                $user_id = User::where('id', auth()->user()->id)->first();
                 if ($user_id){
                     $plate_numbers = PlateNo::where('user_id', $user_id->id)->get();
                     return $this->success($plate_numbers, 'Plate Numbers Retrieved', 200);
