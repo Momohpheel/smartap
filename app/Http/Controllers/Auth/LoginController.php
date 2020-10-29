@@ -54,7 +54,7 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
-        if ($user != null){
+        if ($user){
             // $header = $request->header('Authorization');
             // if ($header == $user->token){
                 $move = Movement::where('user_id', $user->id)->first();
@@ -86,7 +86,7 @@ class LoginController extends Controller
                     "at_location"=> $move->at_location,
                 ];
 
-                return $this->success([$data, $accessToken], 'Success', 200);
+                return $this->success([$data, "access token" => $accessToken], 'Success', 200);
             }else{
                 return $this->error(true, 'Phone Number or Password Incorrect', 400);
             }
