@@ -48,13 +48,23 @@ class ClientController extends Controller
             //$client->url = env('APP_URL').'api/v1/client/'.$client->token;
             // $client->logo = "";
             $client->save();
+            $data = [
+                'company_name' => $client->company_name,
+                'address' => $client->address,
+                'latitude' => $client->latitude,
+                'longitude' => $client->longitude,
+                'state' => $client->state,
+                'lga' => $client->lga,
+                'description' => $client->description,
+                'subscription_plan' => $client->sunscription_plan,
+            ];
 
 
 
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering Client', 401);
         }
-        return $this->success($client, 'Client Registeration Success', 201);
+        return $this->success($data, 'Client Registeration Success', 201);
     }
 
 
@@ -64,8 +74,6 @@ class ClientController extends Controller
             'token' => 'required|string',
         ]);
         $client = Client::where('token', $validated['token'])->first();
-
-
 
         if ($client){
             $data = [
