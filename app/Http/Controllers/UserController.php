@@ -36,6 +36,12 @@ class UserController extends Controller
                 $user->password = md5($validated['password']);
                 $accessToken = $user->createToken('authToken')->accessToken;
                 $user->save();
+                $data = [
+                    'name' => $user->name,
+                'phone_number' => $user->phone_number,
+                'company_token' => $user->company_token,
+                "access token" => $accessToken
+                ];
             }else{
                 return $this->error(true, 'Phone Number Exists', 400);
             }
@@ -43,7 +49,7 @@ class UserController extends Controller
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
-        return $this->success([$user, "access token" => $accessToken], 'User Registeration Success', 201);
+        return $this->success($data, 'User Registeration Success', 201);
     }
 
     public function userProfile(Request $request){

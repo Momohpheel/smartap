@@ -84,9 +84,10 @@ class LoginController extends Controller
                     // "token"=> $user->token,
                     "company_token"=> $user->company_token,
                     "at_location"=> $move->at_location,
+                    "access token" => $accessToken
                 ];
 
-                return $this->success([$data, "access token" => $accessToken], 'Success', 200);
+                return $this->success($data , 'Success', 200);
             }else{
                 return $this->error(true, 'Phone Number or Password Incorrect', 400);
             }
