@@ -49,13 +49,13 @@ class LoginController extends Controller
         $validated = $request->validate([
             'phone_number' => 'required|string',
             'password' => 'required|string',
-            //'company_token' => 'required|string',
+            'company_token' => 'required|string',
             'at_location' => 'boolean'
         ]);
 
-        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->first();
+        $user = User::where('phone_number', $validated['phone_number'])->where('password', md5($validated['password']))->where('company_token', $validated['company_token'])->first();
         if ($user){
-            if ($user->company_token){
+
             // $header = $request->header('Authorization');
             // if ($header == $user->token){
                 $move = Movement::where('user_id', $user->id)->first();
@@ -89,9 +89,7 @@ class LoginController extends Controller
                 ];
 
                 return $this->success($data , 'Success', 200);
-            }else{
-                return $this->error(true, 'User not registered under a company', 400);
-            }
+
         }else{
            return $this->error(true, 'Phone Number or Password Incorrect', 400);
         }
