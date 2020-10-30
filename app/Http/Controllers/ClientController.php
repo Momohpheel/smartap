@@ -55,6 +55,7 @@ class ClientController extends Controller
                 'longitude' => $client->longitude,
                 'state' => $client->state,
                 'lga' => $client->lga,
+                'token' => $client->token,
                 'description' => $client->description,
                 'subscription_plan' => $client->sunscription_plan,
             ];

@@ -27,8 +27,9 @@ class UserController extends Controller
             ]);
 
             $phone = User::where('phone_number', $validated['phone_number'])->first();
-
-            if (!$phone){
+                $company = Client::where('token', $validated['company_token'])->first();
+            if ($company){
+                if (!$phone){
                 $user = new User;
                 $user->phone_number = $validated['phone_number'];
                 $user->company_token = $validated['company_token'];
@@ -45,7 +46,9 @@ class UserController extends Controller
             }else{
                 return $this->error(true, 'Phone Number Exists', 400);
             }
-
+        }else{
+            return $this->error(true, 'Company doesnt exist', 400);
+        }
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
