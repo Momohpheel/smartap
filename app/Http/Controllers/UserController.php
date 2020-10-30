@@ -41,7 +41,7 @@ class UserController extends Controller
                     'name' => $user->name,
                 'phone_number' => $user->phone_number,
                 'company_token' => $user->company_token,
-                "access token" => $accessToken
+                "access_token" => $accessToken
                 ];
             }else{
                 return $this->error(true, 'Phone Number Exists', 400);
