@@ -60,24 +60,31 @@ class UserController extends Controller
                     'city' => 'string',
                     'state' => 'string',
                 ]);
-
-                $header = $request->header('Authorization');
-
-                $user = User::where('token', $header)->first();
+                $user = User::where('id', auth()->user()->id)->first();
                 if ($user){
-                    if ($header == $user->token){
+
                         $user->email = $validated['email'];
                         $user->address = $validated['address'];
                         $user->city = $validated['city'];
                         $user->state = $validated['state'];
                         $user->save();
-                        return $this->success($user, 'User Profile Updated', 201);
+
+
+                        $data = [
+                            'name' => $user->name,
+                            'phone_number' => $user->phone_number,
+                            'company_token' => $user->company_token,
+                            'email' => $user->email,
+                            'address' => $user->address,
+                            'city' => $user->city,
+                            'state' => $user->state,
+                        ];
+
+                        return $this->success($data, 'User Profile Updated', 201);
                     }else{
                         return $this->error(true, 'User not found', 404);
                     }
-                }else{
-                    return $this->error(true, 'invalid token ', 400);
-                }
+
         }catch(Exception $e){
             return $this->error($e->getMessage(), 'Error Registering User', 401);
         }
@@ -191,7 +198,15 @@ class UserController extends Controller
              $Plate->color = $validated['color'];
              $Plate->user_id = $user->id;
              $Plate->save();
-             return $this->success($Plate, 'Vehicle Added', 201);
+
+             $data = [
+                'plate_number' => $Plate->plate_number,
+                'type' => $Plate->type,
+                'brand' => $Plate->brand,
+                'color' => $Plate->color,
+                'user_id' => $Plate->user_id
+             ];
+             return $this->success($data, 'Vehicle Added', 201);
         }else{
                 return $this->error(true, 'Vehicle Exists', 400);
             }

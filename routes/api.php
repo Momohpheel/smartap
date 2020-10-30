@@ -30,7 +30,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::post('login', 'Auth\LoginController@userLogin');
-        Route::post('profile', 'UserController@userProfile');
+        Route::post('profile', 'UserController@userProfile')->middleware('auth:api');
         Route::post('vehicle', 'UserController@vehicleRegisteration')->middleware('auth:api');
         Route::post('vehicle/add', 'UserController@addPlateNumber')->middleware('auth:api');
         Route::get('vehicles', 'UserController@getPlateNumbers')->middleware('auth:api');
