@@ -61,16 +61,14 @@ class LoginController extends Controller
                 $move = Movement::where('user_id', $user->id)->first();
 
                 if ($move){
-                    $move->at_location = $validated['at_location'];
+                    $user->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
-                    $move->at_location = $validated['at_location'];
                     $move->save();
                 }else{
                     $move = new Movement();
-                    $move->at_location = $validated['at_location'];
+                    $user->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
                     $move->user_id = $user->id;
-                    $move->at_location = $validated['at_location'];
                     $move->save();
                 }
 
@@ -84,7 +82,7 @@ class LoginController extends Controller
                     // "address"=> $user->address,
                     // "token"=> $user->token,
                     "company_token"=> $user->company_token,
-                    "at_location"=> $move->at_location,
+                    "at_location"=> $user->at_location,
                     "access_token" => $accessToken
                 ];
 

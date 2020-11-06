@@ -238,14 +238,15 @@ class UserController extends Controller
                     if ($user){
                         //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
                         //if ($user){
+                            $platenu = PlateNo::where('plate_number', $platenumber)->where('user_id', $user->id)->first();
                                 $data = [
                                     'name' => $user->name,
                                     'phone_number' => $user->phone_number,
                                     'state' => $user->state,
-                                    'plate_number' => $plate->plate_number,
-                                    'type' => $plate->type,
-                                    'brand' => $plate->brand,
-                                    'color' => $plate->color,
+                                    'plate_number' => $platenu->plate_number,
+                                    'type' => $platenu->type,
+                                    'brand' => $platenu->brand,
+                                    'color' => $platenu->color,
                                 ];
 
                                 return $this->success($data, 'Fetched User Vehicle', 200);
