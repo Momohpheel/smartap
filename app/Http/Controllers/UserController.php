@@ -318,41 +318,44 @@ class UserController extends Controller
         }
     }
 
-    public function conversation($userId){
-        $users = User::where('id', '!=', auth()->user()->id);
-        $friendInfo = User::findOrFail($userId);
-        $myInfo = User::find(auth()->user()->id);
+    public function sendMessage($number){
+        $url = "https://api.africastalking.com/version1/messaging";
+        $ch = curl_init($url);
 
-        $data = [
-            'users' => $users,
-            'otherPersonInfo' => $friendInfo,
-            'myInfo' => $myInfo
-        ];
+        curl_setopt_array($ch, array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                'username'=> 'sandbox',
+                'to'=> $number,
+                'message' => "Hi, will you mind coming out to move your car?
+                                 it's actually blocking mine! Thanks!",
+                'from' => 'SMART-TAP'
+            ]),
+            CURLOPT_HTTPHEADER => array(
+                'cache-control: no-cache',
+                'Content-Type: application/x-www-form-urlencoded',
+                'Accept: application/json',
+                'apiKey: MyAppApiKey'
+            ),
+        ));
 
 
-    }
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
 
-    public function sendMessage(Request $request){
-        $request->validate([
-            'message' => 'required',
-            'receiver_id' => 'required'
-        ]);
-
-        $sender_id = auth()->user()->id;
-        $receiver_id = $request->receiver_id;
-
-        $message = new Message();
-        $message->message = $request->message;
-
-        if ($message->save()){
-            try{
-                $message->user()->attach($sender_id, ['receiver_id', $receiver_id]);
-            }catch(Exception $e){
-
-            }
+        if ($error){
+            die('There was an error: '. $error);
         }
 
 
-    }
 
+        $trans = json_decode($response);
+
+        header('Location :'. $trans->data->authorization_url);
+        //curl_close($ch);
+
+
+
+    }
 }
