@@ -298,20 +298,25 @@ class UserController extends Controller
             'company_token' => 'required'
         ]);
         $user = User::where('id', auth()->user()->id)->where('company_token', $request->company_token)->first();
-            $move = Movement::where('user_id', $user->id)->where('at_location', true)->first();
+ if ($user){
+        $move = Movement::where('user_id', $user->id)->where('at_location', true)->first();
             if ($move){
                 $move->at_location = false;
                 $move->logout_time = Carbon::now();
                 $move->save();
                 $user->at_location = false;
                 $user->save();
+            }else{
+                return $this->error(true, "User Not Logged In", 400);
             }
 
             // Auth::logout();
 
             return $this->success(true, "User Successfully logged out", 200);
+        }else{
+            return $this->error(true, "wrong company token", 400);
         }
-
+    }
 
     public function conversation($userId){
         $users = User::where('id', '!=', auth()->user()->id);
