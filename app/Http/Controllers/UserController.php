@@ -8,6 +8,7 @@ use App\Model\User;
 use App\Model\PlateNo;
 use App\Traits\Response;
 use App\Model\Vehicle;
+use App\Model\Movement;
 
 class UserController extends Controller
 {
@@ -222,39 +223,66 @@ class UserController extends Controller
 
     public function searchVehicle(Request $request, $platenumber){
       try{
-        $validated = $request->validate([
-            'company_token' => 'required|string'
-        ]);
 
-        $plate = PlateNo::where('plate_number', $platenumber)->where('user_id', auth()->user()->id)->first();
-        if ($plate){
-            $user = User::where('id', auth()->user()->id)->where('company_token', $validated['company_token'])->first();
-            if ($user){
 
-                $data = [
-                    'name' => $user->name,
-                    'phone_number' => $user->phone_number,
-                    'state' => $user->state,
-                    'plate_number' => $plate->plate_number,
-                    'type' => $plate->type,
-                    'brand' => $plate->brand,
-                    'color' => $plate->color,
-                ];
+                $validated = $request->validate([
+                    'company_token' => 'required|string'
+                ]);
 
-                return $this->success($data, 'Fetched User Vehicle', 200);
+                $plate = PlateNo::where('plate_number', $platenumber)->get();
+
+                if ($plate){
+                    foreach ($plate as $pl){
+                        $user = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
+                    }
+                    if ($user){
+                        //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
+                        //if ($user){
+                                $data = [
+                                    'name' => $user->name,
+                                    'phone_number' => $user->phone_number,
+                                    'state' => $user->state,
+                                    'plate_number' => $plate->plate_number,
+                                    'type' => $plate->type,
+                                    'brand' => $plate->brand,
+                                    'color' => $plate->color,
+                                ];
+
+                                return $this->success($data, 'Fetched User Vehicle', 200);
+                            // }else{
+                            //     return $this->error(true, 'User doesnt exist', 400);
+                            // }
+                        }else{
+                            return $this->error(true, 'User is not at the location', 400);
+                        }
+
+                }else{
+                    return $this->error(true, 'Plate Number doesnt exist', 400);
+                }
+
+
+            }catch(Exception $e){
+                return $this->error($e->getMessage(), 'Error Fetching User', 400);
+
             }
 
-        }
 
-        return $this->error(true, 'Error Fetching User', 400);
-
-    }catch(Exception $e){
-        return $this->error($e->getMessage(), 'Error Fetching User', 400);
 
     }
 
+    public function userMovement(){
+        try{
+            $movement = Movement::where('user_id', auth()->user()->id)->get();
+            $data = [
+                'login_time' => $movement->login_time,
+                'logout_time' => $movement->logout_time,
+                'at_location' => $movement->at_location
+            ];
 
-
+            return $this->success($data, "User Movements Fetched", 200);
+        }catch(Exception $e){
+            return $this->success($e->getMessage, "Error Fetching User Movement", 400);
+        }
     }
 
     public function conversation($userId){
