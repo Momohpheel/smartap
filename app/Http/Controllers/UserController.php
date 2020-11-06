@@ -274,11 +274,13 @@ class UserController extends Controller
     public function userMovement(){
         try{
             $movement = Movement::where('user_id', auth()->user()->id)->get();
-            $data = [
-                'login_time' => $movement->login_time,
-                'logout_time' => $movement->logout_time,
-                'at_location' => $movement->at_location
-            ];
+
+            foreach($movement as $move){
+                $data = [
+                    'login_time' => $move->login_time,
+                    'logout_time' => $move->logout_time,
+                ];
+        }
 
             return $this->success($data, "User Movements Fetched", 200);
         }catch(Exception $e){

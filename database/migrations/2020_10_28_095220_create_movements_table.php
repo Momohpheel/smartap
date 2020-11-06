@@ -15,6 +15,7 @@ class CreateMovementsTable extends Migration
     {
         Schema::create('movements', function (Blueprint $table) {
             $table->id();
+            $table->boolean('at_location');
             $table->timestamp('login_time')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
