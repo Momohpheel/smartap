@@ -220,19 +220,78 @@ class UserController extends Controller
 
     }
 
-    public function token() {
-        $text = '';
-        $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    public function searchVehicle(Request $request, $platenumber){
+      try{
+        $validated = $request->validate([
+            'company_token' => 'required|string'
+        ]);
 
-        for ($i = 0; $i<12; $i++) {
-            $random_number = rand(1, strlen($possible));
-            $text = $text.substr($possible, $random_number, 1);
-            // str_replace(array('[',']'), '',
-            $clrStr = str_replace(array('-'), '', $text);
-            if(strlen($clrStr)%4 == 0) $text = $text.'-';
+        $plate = PlateNo::where('plate_number', $platenumber)->where('user_id', auth()->user()->id)->first();
+        if ($plate){
+            $user = User::where('id', auth()->user()->id)->where('company_token', $validated['company_token'])->first();
+            if ($user){
+
+                $data = [
+                    'name' => $user->name,
+                    'phone_number' => $user->phone_number,
+                    'state' => $user->state,
+                    'plate_number' => $plate->plate_number,
+                    'type' => $plate->type,
+                    'brand' => $plate->brand,
+                    'color' => $plate->color,
+                ];
+
+                return $this->success($data, 'Fetched User Vehicle', 200);
+            }
+
         }
-        return strtolower(rtrim($text, "- "));
+
+        return $this->error(true, 'Error Fetching User', 400);
+
+    }catch(Exception $e){
+        return $this->error($e->getMessage(), 'Error Fetching User', 400);
+
     }
 
+
+
+    }
+
+    public function conversation($userId){
+        $users = User::where('id', '!=', auth()->user()->id);
+        $friendInfo = User::findOrFail($userId);
+        $myInfo = User::find(auth()->user()->id);
+
+        $data = [
+            'users' => $users,
+            'otherPersonInfo' => $friendInfo,
+            'myInfo' => $myInfo
+        ];
+
+
+    }
+
+    public function sendMessage(Request $request){
+        $request->validate([
+            'message' => 'required',
+            'receiver_id' => 'required'
+        ]);
+
+        $sender_id = auth()->user()->id;
+        $receiver_id = $request->receiver_id;
+
+        $message = new Message();
+        $message->message = $request->message;
+
+        if ($message->save()){
+            try{
+                $message->user()->attach($sender_id, ['receiver_id', $receiver_id]);
+            }catch(Exception $e){
+
+            }
+        }
+
+
+    }
 
 }
