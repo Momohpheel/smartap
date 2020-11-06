@@ -58,19 +58,20 @@ class LoginController extends Controller
 
             // $header = $request->header('Authorization');
             // if ($header == $user->token){
-                $move = Movement::where('user_id', $user->id)->first();
+                // $move = Movement::where('user_id', $user->id)->first();
 
-                if ($move){
-                    $user->at_location = $validated['at_location'];
-                    $move->login_time = Carbon::now();
-                    $move->save();
-                }else{
+                // if ($move){
+                //     $user->at_location = $validated['at_location'];
+                //     $move->login_time = Carbon::now();
+                //     $move->save();
+                // }else{
                     $move = new Movement();
                     $user->at_location = $validated['at_location'];
+                    $move->at_location = $validated['at_location'];
                     $move->login_time = Carbon::now();
                     $move->user_id = $user->id;
                     $move->save();
-                }
+                // }
 
                 $accessToken = $user->createToken('authToken')->accessToken;
                 $data = [
@@ -94,19 +95,24 @@ class LoginController extends Controller
 
     }
 
-    public function userLogout(){
-
-        $header = $request->header('Authorization');
-        $user = User::where('token', $header)->first();
-        if ($user != null){
-            $move = Movement::where('user_id', $user->id)->first();
+    public function userLogout(Request $request){
+        $request->validate([
+            'company_token' => 'required'
+        ]);
+        $user = User::where('id', auth()->user()->id)->where('company_token', $request->company_token)->first();
+            $move = Movement::where('user_id', $user->id)->where('at_location', true)->first();
             if ($move){
-                $move->at_location = $validated['at_location'];
+                $move->at_location = false;
                 $move->logout_time = Carbon::now();
                 $move->save();
             }
+
+            Auth::logout();
+
+            return $this->success(true, "User Successfully logged out", 200);
         }
-    }
+
+
 
     public function clientLogin(Request $request){
         $validated = $request->validate([
