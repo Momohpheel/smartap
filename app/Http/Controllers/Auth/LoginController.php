@@ -95,23 +95,6 @@ class LoginController extends Controller
 
     }
 
-    public function userLogout(Request $request){
-        $request->validate([
-            'company_token' => 'required'
-        ]);
-        $user = User::where('id', auth()->user()->id)->where('company_token', $request->company_token)->first();
-            $move = Movement::where('user_id', $user->id)->where('at_location', true)->first();
-            if ($move){
-                $move->at_location = false;
-                $move->logout_time = Carbon::now();
-                $move->save();
-            }
-
-            Auth::logout();
-
-            return $this->success(true, "User Successfully logged out", 200);
-        }
-
 
 
     public function clientLogin(Request $request){
