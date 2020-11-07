@@ -279,18 +279,18 @@ class UserController extends Controller
 
                 $plate = PlateNo::where('plate_number', $validated['plate_number'])->get();
 
-                if ($plate){
+                if ($plate != null){
                     foreach ($plate as $pl){
-                        $user[] = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
+                        $user = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
                     }
-                    if ($user[0]){
+                    if ($user){
                         //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
                         //if ($user){
                             $platenu = PlateNo::where('plate_number', $platenumber)->where('user_id', $user->id)->first();
                                 $data = [
-                                    'name' => $user[0]->name,
-                                    'phone_number' => $user[0]->phone_number,
-                                    'state' => $user[0]->state,
+                                    'name' => $user->name,
+                                    'phone_number' => $user->phone_number,
+                                    'state' => $user->state,
                                     'plate_number' => $platenu->plate_number,
                                     'type' => $platenu->type,
                                     'brand' => $platenu->brand,
