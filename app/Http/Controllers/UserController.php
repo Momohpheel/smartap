@@ -170,8 +170,9 @@ class UserController extends Controller
         return $this->success($plate_number, 'Plate Numbers Removed from Active parkers', 200);
     }
 
-    public function removePlateNumber($plate_number){
-        $plate_number = PlateNo::where('plate_number', $plate_number)->first();
+    public function removePlateNumber($id){
+
+        $plate_number = PlateNo::where('id', $id)->first();
         $plate_number->delete();
         return $this->success($plate_number, 'Plate Numbers Deleted', 200);
     }
@@ -255,7 +256,7 @@ class UserController extends Controller
                 'type' => $pla->type,
                 'brand' => $pla->brand,
                 'color' => $pla->color,
-                'user_id' => $pla->user_id
+
              ];
              return $this->success($data, 'Vehicle Updated', 201);
         }else{
