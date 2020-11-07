@@ -37,7 +37,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('vehicles', 'UserController@getPlateNumbers')->middleware('auth:api');
         Route::post('enter/{plate}', 'UserController@ExistingEnterPark')->middleware('auth:api');
         Route::post('exit/{plate}', 'UserController@exitPark')->middleware('auth:api');
-        Route::delete('vehicle/{id}', 'UserController@removePlateNumber');//->middleware('auth:api');
+        Route::delete('vehicle/{id}', 'UserController@removePlateNumber')->middleware('auth:api');
         Route::post('vehicle/search', 'UserController@searchVehicle')->middleware('auth:api');
        Route::post('logout', 'UserController@userLogout')->middleware('auth:api');
        Route::get('movement', 'UserController@userMovement')->middleware('auth:api');
