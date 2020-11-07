@@ -280,35 +280,48 @@ class UserController extends Controller
                 $plate = PlateNo::where('plate_number', $validated['plate_number'])->get();
 
                 if (!empty($plate)){
-
-                    foreach ($plate as $pl){
-                        $user = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
+                    foreach($plate as $pl){
+                    $atlocation = Movement::where('user_id', $pl->user_id)->latest('login_time')->first();
                     }
 
-                    if (!empty($user)){
-                        //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
-                        //if ($user){
-                            $platenu = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
-                                $data = [
-                                    'name' => $user->name,
-                                    'phone_number' => $user->phone_number,
-                                    'state' => $user->state,
+                    $ltime = $atlocation->login_time;
+                    $current_time = Carbon::now();//->addHours(3);
+                    $cti = Carbon::parse($ltime);
 
-                                    'vehicle' => [
-                                        'plate_number' => $platenu->plate_number,
-                                        'type' => $platenu->type,
-                                        'brand' => $platenu->brand,
-                                        'color' => $platenu->color,
-                                    ]
-                                ];
-
-                                return $this->success($data, 'Fetched User Vehicle', 200);
-                            // }else{
-                            //     return $this->error(true, 'User doesnt exist', 400);
-                            // }
-                        }else{
-                            return $this->error(true, 'User is not at the location', 400);
+                    $diff = $cti->diffInHours($current_time);
+                    if ($diff < 3){
+                        foreach($plate as $pl){
+                            // $user = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
+                            $user = User::where('id', $pl->user_id)->where('company_token', $validated['company_token'])->first();
                         }
+                       // return $user;
+                        if (!empty($user)){
+                            //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
+                            //if ($user){
+                                $platenu = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
+                                    $data = [
+                                        'name' => $user->name,
+                                        'phone_number' => $user->phone_number,
+                                        'state' => $user->state,
+                                        'vehicle' => [
+                                            'plate_number' => $platenu->plate_number,
+                                            'type' => $platenu->type,
+                                            'brand' => $platenu->brand,
+                                            'color' => $platenu->color,
+                                        ]
+                                    ];
+
+                                    return $this->success($data, 'Fetched User Vehicle', 200);
+                                // }else{
+                                //     return $this->error(true, 'User doesnt exist', 400);
+                                // }
+                            }else{
+                                return $this->error(true, 'this vehicle has not registered under this company', 400);
+                            }
+
+                    }else{
+                        return $this->error(true, 'the driver doesnt seem to be in the area', 400);
+                    }
 
                 }else{
                     return $this->error(true, 'Plate Number doesnt exist', 400);
