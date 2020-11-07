@@ -222,6 +222,52 @@ class UserController extends Controller
 
     }
 
+    public function updateVehicle(Request $request, $id){
+
+
+        // $header = $request->header('Authorization');
+        $user = User::where('id', auth()->user()->id)->first();
+
+        if (!$user){
+            return $this->error(true, 'No User Found', 400);
+        }
+
+        try{
+            $validated = $request->validate([
+                 'plate_number' => 'required|string',
+                 'type' => 'string',
+                 'brand' => 'string',
+                 'color' => 'string',
+             ]);
+             $pla = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
+
+        if ($pla){
+
+             $pla->plate_number = $validated['plate_number'];
+             $pla->type = $validated['type'];
+             $pla->brand = $validated['brand'];
+             $pla->color = $validated['color'];
+             $pla->user_id = $user->id;
+             $pla->save();
+
+             $data = [
+                'plate_number' => $pla->plate_number,
+                'type' => $pla->type,
+                'brand' => $pla->brand,
+                'color' => $pla->color,
+                'user_id' => $pla->user_id
+             ];
+             return $this->success($data, 'Vehicle Updated', 201);
+        }else{
+                return $this->error(true, 'Vehicle Doesnt Exists', 400);
+            }
+         }catch(Exception $e){
+             return $this->error($e->getMessage(), 'Error Updating Vehicle', 400);
+         }
+
+
+    }
+
     public function searchVehicle(Request $request, $platenumber){
       try{
 
@@ -284,6 +330,7 @@ class UserController extends Controller
                     'logout_time' => $move->logout_time,
                 ];
         }
+
 
             return $this->success($data, "User Movements Fetched", 200);
         }catch(Exception $e){
