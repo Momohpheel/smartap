@@ -277,7 +277,7 @@ class UserController extends Controller
             $movement = Movement::where('user_id', auth()->user()->id)->get();
             $user = User::where('id', auth()->user()->id)->first();
             foreach($movement as $move){
-                $data = [
+                $data[] = [
                     'name' => $user->name,
                     'at_location' => $user->at_location,
                     'login_time' => $move->login_time,
