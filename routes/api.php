@@ -42,5 +42,6 @@ Route::group(['prefix' => 'v1'], function() {
        Route::get('movement', 'UserController@userMovement')->middleware('auth:api');
 
 
+
     });
 });
