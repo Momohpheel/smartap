@@ -172,7 +172,7 @@ class UserController extends Controller
 
     public function removePlateNumber($id){
 
-        $plate_number = PlateNo::where('id', $id)->first();
+        $plate_number = PlateNo::where('id', $id)->where('user_id', auth()->user()->id)->first();
         $plate_number->delete();
         return $this->success($plate_number, 'Plate Numbers Deleted', 200);
     }
