@@ -293,10 +293,13 @@ class UserController extends Controller
                                     'name' => $user->name,
                                     'phone_number' => $user->phone_number,
                                     'state' => $user->state,
-                                    'plate_number' => $platenu->plate_number,
-                                    'type' => $platenu->type,
-                                    'brand' => $platenu->brand,
-                                    'color' => $platenu->color,
+
+                                    'vehicle' => [
+                                        'plate_number' => $platenu->plate_number,
+                                        'type' => $platenu->type,
+                                        'brand' => $platenu->brand,
+                                        'color' => $platenu->color,
+                                    ]
                                 ];
 
                                 return $this->success($data, 'Fetched User Vehicle', 200);
