@@ -239,7 +239,7 @@ class UserController extends Controller
                  'brand' => 'string',
                  'color' => 'string',
              ]);
-             $pla = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
+             $pla = PlateNo::where('id', $id)->where('user_id', $user->id)->first();
 
         if ($pla){
 
