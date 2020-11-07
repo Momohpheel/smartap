@@ -279,7 +279,7 @@ class UserController extends Controller
 
                 $plate = PlateNo::where('plate_number', $validated['plate_number'])->get();
 
-                if ($plate != null){
+                if (!empty($plate)){
                     foreach ($plate as $pl){
                         $user = User::where('id', $pl->user_id)->where('at_location', true)->where('company_token', $validated['company_token'])->first();
                     }
