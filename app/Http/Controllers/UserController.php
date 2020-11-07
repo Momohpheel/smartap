@@ -286,7 +286,7 @@ class UserController extends Controller
                     if ($user){
                         //$user = User::where('id', $plate->user_id)->where('company_token', $validated['company_token'])->first();
                         //if ($user){
-                            $platenu = PlateNo::where('plate_number', $platenumber)->where('user_id', $user->id)->first();
+                            $platenu = PlateNo::where('plate_number', $validated['plate_number'])->where('user_id', $user->id)->first();
                                 $data = [
                                     'name' => $user->name,
                                     'phone_number' => $user->phone_number,
