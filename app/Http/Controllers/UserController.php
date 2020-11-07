@@ -268,15 +268,16 @@ class UserController extends Controller
 
     }
 
-    public function searchVehicle(Request $request, $platenumber){
+    public function searchVehicle(Request $request){
       try{
 
 
                 $validated = $request->validate([
-                    'company_token' => 'required|string'
+                    'company_token' => 'required|string',
+                    'plate_number' => 'required'
                 ]);
 
-                $plate = PlateNo::where('plate_number', $platenumber)->get();
+                $plate = PlateNo::where('plate_number', $validated['plate_number'])->get();
 
                 if ($plate){
                     foreach ($plate as $pl){
