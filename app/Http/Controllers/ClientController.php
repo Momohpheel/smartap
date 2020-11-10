@@ -110,7 +110,7 @@ class ClientController extends Controller
             $company = Client::where('id', auth()->user()->id)->first();
             $users = User::where('company_token', $company->token)->get();
 
-            if(empty($users)){
+            if(!$users){
                 return $this->error(true, "No User is registered under this company",400);
 
 
