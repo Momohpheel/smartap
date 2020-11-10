@@ -120,7 +120,9 @@ class ClientController extends Controller
                             'state' => $user->state,
                         ];
                     }
-                    return $this->success($data, "Users Retrieved",200);
+
+                    return $this->success($users, "Users Retrieved",200);
+
             }else{
                 return $this->error(true, "No User is registered under this company",400);
             }
