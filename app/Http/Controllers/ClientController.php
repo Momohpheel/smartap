@@ -74,7 +74,7 @@ class ClientController extends Controller
                 ]);
 
 
-                $client = Client::where('company_name', $validated['company_name'])->where('password', $validated['password'])->first();
+                $client = Client::where('company_name', $validated['company_name'])->where('password', md5($validated['password']))->first();
                     if ($client){
                         if ($client->token == $validated['company_token']){
                             $accessToken = $client->createToken('ClientToken')->accessToken;
