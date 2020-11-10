@@ -111,7 +111,7 @@ class ClientController extends Controller
             $users = User::where('company_token', $company->token)->get();
             if ($users){
                     foreach ($users as $user){
-                        $data = [
+                        $data[] = [
                             'name' => $user->name,
                             'phone_number' => $user->phone_number,
                             'email' => $user->email,
