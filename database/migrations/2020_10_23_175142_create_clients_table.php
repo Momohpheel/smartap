@@ -18,6 +18,7 @@ class CreateClientsTable extends Migration
             $table->string('company_name');
             $table->string('token');
             $table->string('address');
+            $table->string('password');
             $table->string('long');
             $table->string('lat');
             $table->string('logo')->nullable();

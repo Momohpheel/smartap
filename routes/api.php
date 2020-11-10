@@ -21,9 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'client'], function() {
         Route::post('register', 'ClientController@registerClient');
-        Route::get('/', 'ClientController@getOneClient');
-        Route::get('/active', 'ClientController@getAllActiceMembers')->middleware('auth:client');
-        Route::get('/{plate_number}', 'ClientController@getUserDetails')->middleware('auth:client');
+        Route::post('login', 'ClientController@clientLogin');
+        Route::get('/users', 'ClientController@getUsersRegisteredUnderCompany')->middleware('auth:client');
 
 });
 

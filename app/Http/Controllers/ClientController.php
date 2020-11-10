@@ -24,17 +24,11 @@ class ClientController extends Controller
                 'state' => 'required|string',
                 'lga' => 'required|string',
                 'description' => 'required|string',
+                'password' => 'required',
                 'subscription_plan' => 'required|string',
-                // 'logo' => 'required|image|max:2000|mimes:jpeg,jpg,png'
             ]);
 
-            // if ($request->hasFile('logo')){
-            //     $name = $request->file('logo')->getClientOriginalName();
-            //     $ext = $request->file('logo')->getClientOriginalExtension();
-            //     $name_without_ext = pathinfo($name, PATHINFO_FILENAME);
 
-
-            // }
             $client = new Client;
             $client->company_name = $validated['company_name'];
             $client->address = $validated['address'];
@@ -43,10 +37,11 @@ class ClientController extends Controller
             $client->state = $validated['state'];
             $client->lga = $validated['lga'];
             $client->description = $validated['description'];
+            $client->password = md5($validated['password']);
             $client->subscription_plan = $validated['subscription_plan'];
             $client->token = $this->token();
-            //$client->url = env('APP_URL').'api/v1/client/'.$client->token;
-            // $client->logo = "";
+            $accessToken = $client->createToken('ClientToken')->accessToken;
+
             $client->save();
             $data = [
                 'company_name' => $client->company_name,
@@ -58,6 +53,7 @@ class ClientController extends Controller
                 'token' => $client->token,
                 'description' => $client->description,
                 'subscription_plan' => $client->sunscription_plan,
+                'access_token' => $accessToken,
             ];
 
 
@@ -68,61 +64,76 @@ class ClientController extends Controller
         return $this->success($data, 'Client Registeration Success', 201);
     }
 
+    public function clientLogin(Request $request){
+        try{
+                $validated = $request->validate([
+                    "company_name" => "required|string",
+                    "company_token" => "required|string",
+                    "password" => "required"
 
-    public function getOneClient(Request $request){
-        //$header = $request->header('Authorization');
-        $validated = $request->validate([
-            'token' => 'required|string',
-        ]);
-        $client = Client::where('token', $validated['token'])->first();
-
-        if ($client){
-            $data = [
-                'company_name' => $client->company_name,
-                'address' => $client->address,
-                'token' => $client->token,
-                'latitude' => $client->lat,
-                'longitude' => $client->long,
-                'state' => $client->state,
-                'lga' => $client->lga,
-                'subscription_plan' => $client->subscription_plan,
-        ];
-            return $this->success($data, 'Client Fetched', 200);
-        }
-        return $this->error(true, 'this token is invalid', 400);
-    }
+                ]);
 
 
-    public function getAllActiceMembers(){
-        $active_members = PlateNo::where('is_active', true)->get();
-        if ($active_members){
-            return $this->success($active_members, 'All Actice Members Fetched', 200);
-        }else{
-            return $this->error(true, 'No Actice Members Fetched', 400);
-        }
-    }
+                $client = Client::where('company_name', $validated['company_name'])->where('password', $validated['password'])->first();
+                    if ($client){
+                        if ($client->token == $validated['company_token']){
+                            $accessToken = $client->createToken('ClientToken')->accessToken;
 
-    public function getUserDetails($plate){
-        $pl = PlateNo::where('plate_number', $plate)->first();
-        if ($pl){
-            $user = User::where('id', $pl->id)->first();
-                if ($user){
-                    $details = [
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'phone_number' => $user->phone_number,
-                    ];
+                            $data = [
+                                'company_name' => $client->company_name,
+                                'address' => $client->address,
+                                'latitude' => $client->latitude,
+                                'longitude' => $client->longitude,
+                                'state' => $client->state,
+                                'lga' => $client->lga,
+                                'description' => $client->description,
+                                'subscription_plan' => $client->sunscription_plan,
+                                'access_token' => $accessToken,
+                            ];
+                            return $this->success($data, "Login Successfull", 200);
+                        }
+                        else{
+                            return $this->error(true, "Wrong token", 422);
+                        }
+                    }
+                    else{
+                        return $this->error(true, "Company Name or Password Incorrect", 422);
+                    }
+                }catch(Exception $e){
+                    return $this->error($e->getMessage(),"Login Unsuccessful",400);
 
-                    return $this->success($details, 'Member Details Fetched', 200);
-                }else{
-                    return $this->error(true, 'No User Found', 400);
                 }
-        }else{
-            return $this->error(true, 'Plate Number Not Found', 400);
-        }
-
-
     }
+
+    public function getUsersRegisteredUnderCompany(){
+        try{
+            $company = Client::where('id', auth()->user()->id)->first();
+            $users = User::where('company_token', $company->token)->get();
+            if ($users){
+                    foreach ($users as $user){
+                        $data = [
+                            'name' => $user->name,
+                            'phone_number' => $user->phone_number,
+                            'email' => $user->email,
+                            'address' => $user->address,
+                            'city' => $user->city,
+                            'state' => $user->state,
+                        ];
+                    }
+                    return $this->success($data, "Users Retrieved",200);
+            }else{
+                return $this->error(true, "No User is registered under this company",400);
+            }
+
+        }catch(Exception $e){
+            $this->error($e->getMessage(), "Error in gettting Users", 400);
+        }
+    }
+
+
+    public function getOneClient(Request $request){    }
+    public function getAllActiceMembers(){}
+    public function getUserDetails(){    }
 
     public function token() {
         $text = '';
