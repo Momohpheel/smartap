@@ -109,22 +109,25 @@ class ClientController extends Controller
         try{
             $company = Client::where('id', auth()->user()->id)->first();
             $users = User::where('company_token', $company->token)->get();
-            if(!empty($users)){
-                    foreach($users as $user){
-                        $data[] = [
-                            'name' => $user->name,
-                            'phone_number' => $user->phone_number,
-                            'email' => $user->email,
-                            'address' => $user->address,
-                            'city' => $user->city,
-                            'state' => $user->state,
-                        ];
-                    }
 
-                    return $this->success($users, "Users Retrieved",200);
+            if(empty($users)){
+                return $this->error(true, "No User is registered under this company",400);
+
+
 
             }else{
-                return $this->error(true, "No User is registered under this company",400);
+                foreach($users as $user){
+                    $data[] = [
+                        'name' => $user->name,
+                        'phone_number' => $user->phone_number,
+                        'email' => $user->email,
+                        'address' => $user->address,
+                        'city' => $user->city,
+                        'state' => $user->state,
+                    ];
+                }
+
+                return $this->success($data, "Users Retrieved",200);
             }
 
         }catch(Exception $e){
