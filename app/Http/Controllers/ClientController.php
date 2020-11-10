@@ -110,7 +110,8 @@ class ClientController extends Controller
             $company = Client::where('id', auth()->user()->id)->first();
             $users = User::where('company_token', $company->token)->get();
 
-            if(!empty($users)){
+            if($users != []){
+
                     foreach($users as $user){
                         $data[] = [
                             'name' => $user->name,
