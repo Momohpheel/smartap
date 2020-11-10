@@ -108,14 +108,12 @@ class ClientController extends Controller
     public function getUsersRegisteredUnderCompany(){
         try{
             $company = Client::where('id', auth()->user()->id)->first();
-            $users = User::where('company_token', $company->token)->get();
-
-            if(!$users){
+            $users = User::where('company_token' ,$company->token)->get();
+            //if (count($users) == 0){return 'yes';}else{return 'no';}
+            if(count($users) == 0){
                 return $this->error(true, "No User is registered under this company",400);
-
-
-
-            }else{
+            }
+            else{
                 foreach($users as $user){
                     $data[] = [
                         'name' => $user->name,
