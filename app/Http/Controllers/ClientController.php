@@ -69,7 +69,6 @@ class ClientController extends Controller
                             'lga' => 'required|string',
                             'description' => 'required|string',
                             'subscription_plan' => 'required|string',
-                            'token'=> 'required'
                         ]);
 
                         $client = Client::where('id', auth()->user()->id)->first();
