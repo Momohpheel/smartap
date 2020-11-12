@@ -57,7 +57,7 @@ class ClientController extends Controller
         return $this->success($data, 'Client Registeration Success', 201);
     }
 
-    public function addProfile(Request $request, $token){
+    public function addProfile(Request $request){
 
         try{
                         $validated = $request->validate([
