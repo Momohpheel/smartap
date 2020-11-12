@@ -18,42 +18,35 @@ class ClientController extends Controller
         try{
             $validated = $request->validate([
                 'company_name' => 'required|string',
-                'address' => 'required|string',
-                'latitude' => 'required|numeric',
-                'longitude' => 'required|numeric',
-                'state' => 'required|string',
-                'lga' => 'required|string',
-                'description' => 'required|string',
                 'password' => 'required',
-                'subscription_plan' => 'required|string',
+                'phone_number' =>'required|string',
+                'official_email' => "required|email"
+
             ]);
 
 
             $client = new Client;
             $client->company_name = $validated['company_name'];
-            $client->address = $validated['address'];
-            $client->long = $validated['longitude'];
-            $client->lat = $validated['latitude'];
-            $client->state = $validated['state'];
-            $client->lga = $validated['lga'];
-            $client->description = $validated['description'];
             $client->password = md5($validated['password']);
-            $client->subscription_plan = $validated['subscription_plan'];
+            $client->email = $validated['official_email'];
+            $client->phone_number = $validated['phone_number'];
             $client->token = $this->token();
             $accessToken = $client->createToken('ClientToken')->accessToken;
 
             $client->save();
             $data = [
                 'company_name' => $client->company_name,
+                'token' => $client->token,
+                'email' =>$client->email,
+                'phone_number' => $client->phone_number,
+                'access_token' => $accessToken,
                 'address' => $client->address,
                 'latitude' => $client->latitude,
                 'longitude' => $client->longitude,
                 'state' => $client->state,
                 'lga' => $client->lga,
-                'token' => $client->token,
-                'description' => $client->description,
+               'description' => $client->description,
                 'subscription_plan' => $client->sunscription_plan,
-                'access_token' => $accessToken,
             ];
 
 
@@ -64,45 +57,120 @@ class ClientController extends Controller
         return $this->success($data, 'Client Registeration Success', 201);
     }
 
+    public function addProfile(Request $request, $token){
+
+        try{
+                        $validated = $request->validate([
+                            'company_name' => 'required|string',
+                            'address' => 'required|string',
+                            'latitude' => 'required|numeric',
+                            'longitude' => 'required|numeric',
+                            'state' => 'required|string',
+                            'lga' => 'required|string',
+                            'description' => 'required|string',
+                            'subscription_plan' => 'required|string',
+                            'token'=> 'required'
+                        ]);
+
+                        $client = Client::where('id', auth()->user()->id)->first();
+                        $client->company_name = $validated['company_name'];
+                        $client->address = $validated['address'];
+                        $client->long = $validated['longitude'];
+                        $client->lat = $validated['latitude'];
+                        $client->state = $validated['state'];
+                        $client->lga = $validated['lga'];
+                        $client->description = $validated['description'];
+                        $client->subscription_plan = $validated['subscription_plan'];
+                        $client->save();
+
+
+                        $data = [
+                            'company_name' => $client->company_name,
+                            'address' => $client->address,
+                            'latitude' => $client->latitude,
+                            'longitude' => $client->longitude,
+                            'state' => $client->state,
+                            'lga' => $client->lga,
+                            'description' => $client->description,
+                            'subscription_plan' => $client->sunscription_plan,
+                        ];
+
+
+    }catch(Exception $e){
+        return $this->error($e->getMessage(), 'Error Registering Client', 401);
+    }
+    return $this->success($data, 'Client Registeration Success', 201);
+
+
+}
+
+
+
     public function clientLogin(Request $request){
         try{
                 $validated = $request->validate([
-                    "company_name" => "required|string",
-                    "company_token" => "required|string",
+                    "username" => "required|string",
                     "password" => "required"
-
                 ]);
 
 
-                $client = Client::where('company_name', $validated['company_name'])->where('password', md5($validated['password']))->first();
-                    if ($client){
-                        if ($client->token == $validated['company_token']){
-                            $accessToken = $client->createToken('ClientToken')->accessToken;
+                $client_phone = Client::where('phone_number', $validated['username'])->first();
+                $client_email = Client::where('email', $validated['username'])->first();
+                if ($client_phone){
 
-                            $data = [
-                                'company_name' => $client->company_name,
-                                'address' => $client->address,
-                                'latitude' => $client->latitude,
-                                'longitude' => $client->longitude,
-                                'state' => $client->state,
-                                'lga' => $client->lga,
-                                'description' => $client->description,
-                                'subscription_plan' => $client->sunscription_plan,
-                                'access_token' => $accessToken,
-                            ];
-                            return $this->success($data, "Login Successfull", 200);
-                        }
-                        else{
-                            return $this->error(true, "Wrong token", 422);
-                        }
-                    }
-                    else{
-                        return $this->error(true, "Company Name or Password Incorrect", 422);
-                    }
-                }catch(Exception $e){
-                    return $this->error($e->getMessage(),"Login Unsuccessful",400);
+                    if ($client_phone->password == md5($validated['password'])){
+                        $accessToken = $client_phone->createToken('ClientToken')->accessToken;
+                        $data = [
+                            'company_name' => $client_phone->company_name,
+                            'email' => $client_phone->email,
+                            'phone_number' => $client_phone->phone_number,
+                            'address' => $client_phone->address,
+                            'latitude' => $client_phone->latitude,
+                            'longitude' => $client_phone->longitude,
+                            'state' => $client_phone->state,
+                            'lga' => $client_phone->lga,
+                            'description' => $client_phone->description,
+                            'subscription_plan' => $client_phone->sunscription_plan,
+                            'access_token' => $accessToken,
+                        ];
+                        return $this->success($data, "Login Successfull", 200);
 
+
+                    }else{
+                        return $this->error(true, "Wrong Password", 422);
+                    }
+
+                }else if ($client_email) {
+                    if ($client_email->password == md5($validated['password'])){
+                        $accessToken = $client_email->createToken('ClientToken')->accessToken;
+                        $data = [
+                            'company_name' => $client_email->company_name,
+                            'address' => $client_email->address,
+                            'email' => $client_email->email,
+                            'phone_number' => $client_email->phone_number,
+                            'latitude' => $client_email->latitude,
+                            'longitude' => $client_email->longitude,
+                            'state' => $client_email->state,
+                            'lga' => $client_email->lga,
+                            'description' => $client_email->description,
+                            'subscription_plan' => $client_email->sunscription_plan,
+                            'access_token' => $accessToken,
+                        ];
+                        return $this->success($data, "Login Successfull", 200);
+
+                    }else{
+                        return $this->error(true, "Wrong Password", 422);
+                    }
+
+
+                }else{
+                    return $this->error(true, "This Company doesnt exist", 422);
                 }
+
+            }catch(Exception $e){
+                return $this->error($e->getMessage(),"Login Unsuccessful",400);
+            }
+
     }
 
     public function getUsersRegisteredUnderCompany(){
