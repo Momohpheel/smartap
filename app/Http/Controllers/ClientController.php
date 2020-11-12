@@ -113,8 +113,8 @@ class ClientController extends Controller
                 ]);
 
 
-                $client_phone = Client::where('phone_number', $validated['username'])->first();
-                $client_email = Client::where('email', $validated['username'])->first();
+                $client_phone = Client::where('phone_number', $validated['company'])->first();
+                $client_email = Client::where('email', $validated['company'])->first();
                 if ($client_phone){
 
                     if ($client_phone->password == md5($validated['password'])){
