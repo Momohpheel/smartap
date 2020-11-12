@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'client'], function() {
         Route::post('register', 'ClientController@registerClient');
-        Route::post('login', 'ClientController@loginClient');
+        Route::post('login', 'ClientController@clientLogin');
         Route::put('profile', 'ClientController@addProfile')->middleware('auth:client');
         Route::get('/users', 'ClientController@getUsersRegisteredUnderCompany')->middleware('auth:client');
 
