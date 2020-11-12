@@ -108,7 +108,7 @@ class ClientController extends Controller
     public function clientLogin(Request $request){
         try{
                 $validated = $request->validate([
-                    "username" => "required|string",
+                    "company" => "required|string",
                     "password" => "required"
                 ]);
 
