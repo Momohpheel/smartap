@@ -86,8 +86,8 @@ class ClientController extends Controller
                         $data = [
                             'company_name' => $client->company_name,
                             'address' => $client->address,
-                            'latitude' => $client->latitude,
-                            'longitude' => $client->longitude,
+                            'latitude' => $client->lat,
+                            'longitude' => $client->long,
                             'state' => $client->state,
                             'lga' => $client->lga,
                             'description' => $client->description,
