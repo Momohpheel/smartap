@@ -46,7 +46,7 @@ class ClientController extends Controller
                 'state' => $client->state,
                 'lga' => $client->lga,
                'description' => $client->description,
-                'subscription_plan' => $client->sunscription_plan,
+                //'subscription_plan' => $client->sunscription_plan,
             ];
 
 
@@ -68,7 +68,7 @@ class ClientController extends Controller
                             'state' => 'required|string',
                             'lga' => 'required|string',
                             'description' => 'required|string',
-                            'subscription_plan' => 'required|string',
+                            //'subscription_plan' => 'required|string',
                         ]);
 
                         $client = Client::where('id', auth()->user()->id)->first();
@@ -79,7 +79,7 @@ class ClientController extends Controller
                         $client->state = $validated['state'];
                         $client->lga = $validated['lga'];
                         $client->description = $validated['description'];
-                        $client->subscription_plan = $validated['subscription_plan'];
+                        //$client->subscription_plan = $validated['subscription_plan'];
                         $client->save();
 
 
@@ -91,7 +91,7 @@ class ClientController extends Controller
                             'state' => $client->state,
                             'lga' => $client->lga,
                             'description' => $client->description,
-                            'subscription_plan' => $client->sunscription_plan,
+                            //'subscription_plan' => $client->sunscription_plan,
                         ];
 
 
@@ -128,6 +128,7 @@ class ClientController extends Controller
                             'longitude' => $client_phone->long,
                             'state' => $client_phone->state,
                             'lga' => $client_phone->lga,
+                            'token' => $client_phone->token,
                             'description' => $client_phone->description,
                             'subscription_plan' => $client_phone->sunscription_plan,
                             'access_token' => $accessToken,
@@ -151,6 +152,7 @@ class ClientController extends Controller
                             'longitude' => $client_email->longitude,
                             'state' => $client_email->state,
                             'lga' => $client_email->lga,
+                            'token' => $client_phone->token,
                             'description' => $client_email->description,
                             'subscription_plan' => $client_email->sunscription_plan,
                             'access_token' => $accessToken,
@@ -178,7 +180,7 @@ class ClientController extends Controller
             $users = User::where('company_token' ,$company->token)->get();
             //if (count($users) == 0){return 'yes';}else{return 'no';}
             if(count($users) == 0){
-                return $this->error(true, "No User is registered under this company",400);
+                return $this->success([], "No User is registered under this company",200);
             }
             else{
                 foreach($users as $user){

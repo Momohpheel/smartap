@@ -27,7 +27,7 @@ class CreateClientsTable extends Migration
             $table->string('state')->nullable();
             $table->string('lga')->nullable();
             $table->string('description')->nullable();
-            $table->string('subscription_plan')->nullable();
+            //$table->string('subscription_plan')->nullable();
             $table->timestamps();
         });
     }
