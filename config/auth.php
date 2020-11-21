@@ -51,6 +51,11 @@ return [
             'provider' => 'client',
             'hash' => false,
         ],
+        'client-api' => [
+            'driver' => 'session',
+            'provider' => 'client',
+            'hash' => false,
+        ],
         'admin' => [
             'driver' => 'passport',
             'provider' => 'users',

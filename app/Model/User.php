@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Model\PlateNo;
 use Laravel\Passport\HasApiTokens;
+use App\Notifications\PasswordReset;
+
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
@@ -34,4 +36,6 @@ class User extends Authenticatable
     public function plates(){
         return $this->hasMany(PlateNo::class);
     }
+
+
 }

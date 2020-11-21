@@ -204,7 +204,9 @@ class ClientController extends Controller
 
 
     public function getOneClient(Request $request){    }
-    public function getAllActiceMembers(){}
+    public function getAllActiceMembers(){
+
+    }
     public function getUserDetails(){    }
 
     public function token() {

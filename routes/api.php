@@ -24,8 +24,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('login', 'ClientController@clientLogin');
         Route::put('profile', 'ClientController@addProfile')->middleware('auth:client');
         Route::get('/users', 'ClientController@getUsersRegisteredUnderCompany')->middleware('auth:client');
+    });
 
-});
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
@@ -41,8 +43,5 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('vehicle/search', 'UserController@searchVehicle')->middleware('auth:api');
        Route::post('logout', 'UserController@userLogout')->middleware('auth:api');
        Route::get('movement', 'UserController@userMovement')->middleware('auth:api');
-
-
-
     });
 });
