@@ -22,6 +22,7 @@ class CreateClientsTable extends Migration
             $table->string('address')->nullable();
             $table->string('password');
             $table->string('long')->nullable();
+            $table->rememberToken();
             $table->string('lat')->nullable();
             $table->string('logo')->nullable();
             $table->string('state')->nullable();
