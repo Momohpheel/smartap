@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Model\Client;
 use App\Model\User;
+use App\Model\PlateNo;
 use App\Model\subscriptionPlan as SubPlan;
 use App\Traits\Response;
 
@@ -208,6 +209,7 @@ class ClientController extends Controller
 
         try{
             $validated = $request->validate([
+                "token" => "required",
                 'password' => "required|string",
                 'new_password' => "required|string",
                 "confirm_password" => "required|string"
@@ -215,9 +217,9 @@ class ClientController extends Controller
 
             if ($validated['new_password'] == $validated['confirm_password']){
 
-                $client = Client::where('id', auth()->user()->id)->where('password', Hash::check($validated['password']))->first();
+                $client = Client::where('id', auth()->user()->id)->where('password', md5($validated['password']))->where('token', $validated['token'])->first();
                 if ($client){
-                    $client->password = Hash::make($validated['new_password']);
+                    $client->password = md5($validated['new_password']);
                     $client->save();
                     $data = [
                         'company_name' => $client->company_name,
@@ -248,18 +250,19 @@ class ClientController extends Controller
         if ($user){
             $vehicles = PlateNo::where('user_id', $id)->get();
             foreach($vehicles as $vehicle){
-                $data = [
-                    'name' => $user->name,
-                    'phone' => $user->phone_number,
-                    'address' => $user->address,
-                    'vehicles' => [
-                        'plate_number' => $vehicle->plate_number,
-                        'brand' => $vehicle->brand,
-                        'type' => $vehicle->type,
-                        'color' => $vehicle->color,
-                    ]
+                $cars[] = [
+                    'plate_number' => $vehicle->plate_number,
+                    'brand' => $vehicle->brand,
+                    'type' => $vehicle->type,
+                    'color' => $vehicle->color,
                 ];
             }
+            $data = [
+                'name' => $user->name,
+                'phone' => $user->phone_number,
+                'address' => $user->address,
+                'vehicles' => $cars
+            ];
 
 
         return $this->success($data, "User Details", 200);
@@ -287,7 +290,24 @@ class ClientController extends Controller
         return $this->success($sub, "Subscription Added", 200);
      }
 
+     public function getClientInfo(Request $request){
+         $validated = $request->validate([
+             'token' => 'required'
+         ]);
+         $client = Client::where('token', $validated['token'])->first();
+         $data = [
+            'company_name' => $client->company_name,
+            'address' => $client->address,
+            'latitude' => $client->lat,
+            'longitude' => $client->long,
+            'state' => $client->state,
+            'lga' => $client->lga,
+            'description' => $client->description,
+            'token' => $client->token,
 
+         ];
+         return $this->success($data, "Client Details", 200);
+     }
 
     public function token() {
         $text = '';

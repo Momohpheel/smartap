@@ -23,9 +23,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('register', 'ClientController@registerClient');
         Route::post('login', 'ClientController@clientLogin');
         Route::put('profile', 'ClientController@addProfile')->middleware('auth:client');
+        Route::get('/', 'ClientController@getClientInfo')->middleware('auth:client');
         Route::get('/users', 'ClientController@getUsersRegisteredUnderCompany')->middleware('auth:client');
         Route::post('/change-password', 'ClientController@changePassword')->middleware('auth:client');
-        Route::get('/user', 'ClientController@getUserDetails')->middleware('auth:client');
+        Route::get('/user/{id}', 'ClientController@getUserDetails')->middleware('auth:client');
         Route::post('/subscription', 'ClientController@sub_plan')->middleware('auth:client');
     });
 

@@ -394,6 +394,7 @@ class UserController extends Controller
 
         try{
             $validated = $request->validate([
+                'company_token' => "required|string",
                 'password' => "required|string",
                 'new_password' => "required|string",
                 "confirm_password" => "required|string"
@@ -401,9 +402,9 @@ class UserController extends Controller
 
             if ($validated['new_password'] == $validated['confirm_password']){
 
-                $user = User::where('id', auth()->user()->id)->where('password', Hash::check($validated['password']))->first();
+                $user = User::where('id', auth()->user()->id)->where('password', md5($validated['password']))->where('company_token', $validated['company_token'])->first();
                 if ($user){
-                    $user->password = Hash::make($validated['new_password']);
+                    $user->password = md5($validated['new_password']);
                     $user->save();
                     $data = [
                         'name' => $user->name,
