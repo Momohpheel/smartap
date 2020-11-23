@@ -49,7 +49,7 @@ class ResetPasswordController extends Controller
     public function showResetForm(Request $request, $token = null)
     {
 
-        return redirect()->away(env('APP_URL') . 'password/reset/' . $token. '?email=' . $request->email);
+        return redirect()->away(env('APP_URL') . '  password/reset/' . $token. '?email=' . $request->email);
     }
 
     /**

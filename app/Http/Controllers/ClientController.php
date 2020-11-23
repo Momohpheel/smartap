@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Model\Client;
 use App\Model\User;
+use App\Model\subscriptionPlan as SubPlan;
 use App\Traits\Response;
 
 class ClientController extends Controller
@@ -130,7 +131,7 @@ class ClientController extends Controller
                             'lga' => $client_phone->lga,
                             'token' => $client_phone->token,
                             'description' => $client_phone->description,
-                            'subscription_plan' => $client_phone->sunscription_plan,
+                            //'subscription_plan' => $client_phone->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
                         return $this->success($data, "Login Successfull", 200);
@@ -154,7 +155,7 @@ class ClientController extends Controller
                             'lga' => $client_email->lga,
                             'token' => $client_phone->token,
                             'description' => $client_email->description,
-                            'subscription_plan' => $client_email->sunscription_plan,
+                            //'subscription_plan' => $client_email->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
                         return $this->success($data, "Login Successfull", 200);
@@ -191,6 +192,7 @@ class ClientController extends Controller
                         'address' => $user->address,
                         'city' => $user->city,
                         'state' => $user->state,
+                        'at_location' => $user->at_location,
                     ];
                 }
 
@@ -202,12 +204,90 @@ class ClientController extends Controller
         }
     }
 
+    public function changePassword(Request $request){
 
-    public function getOneClient(Request $request){    }
-    public function getAllActiceMembers(){
+        try{
+            $validated = $request->validate([
+                'password' => "required|string",
+                'new_password' => "required|string",
+                "confirm_password" => "required|string"
+            ]);
+
+            if ($validated['new_password'] == $validated['confirm_password']){
+
+                $client = Client::where('id', auth()->user()->id)->where('password', Hash::check($validated['password']))->first();
+                if ($client){
+                    $client->password = Hash::make($validated['new_password']);
+                    $client->save();
+                    $data = [
+                        'company_name' => $client->company_name,
+                        'address' => $client->address,
+                    ];
+                    return $this->success($data, "Password changed", 200);
+                }else{
+                    return $this->error([], "Client doesn't exist", 400);
+                }
+
+
+            }else{
+                return $this->error([], "Passwords do not match", 400);
+            }
+
+        }catch(Exception $e){
+            return $this->error($e->getMessage(), "Password couldnt be changed", 400);
+        }
 
     }
-    public function getUserDetails(){    }
+
+    public function getUserDetails($id){
+        if (!$id){
+            return $this->error([], "No resource given", 400);
+        }
+
+        $user = User::where('id', $id)->first();
+        if ($user){
+            $vehicles = PlateNo::where('user_id', $id)->get();
+            foreach($vehicles as $vehicle){
+                $data = [
+                    'name' => $user->name,
+                    'phone' => $user->phone_number,
+                    'address' => $user->address,
+                    'vehicles' => [
+                        'plate_number' => $vehicle->plate_number,
+                        'brand' => $vehicle->brand,
+                        'type' => $vehicle->type,
+                        'color' => $vehicle->color,
+                    ]
+                ];
+            }
+
+
+        return $this->success($data, "User Details", 200);
+
+        }else{
+            return $this->error([], "No user found", 400);
+        }
+
+     }
+
+     public function sub_plan(Request $request){
+        $validated = $request->validate([
+            'plan' => "required|string",
+            "amount" => "required|string",
+            "expiry_date" => "required|string"
+        ]);
+
+        $sub = new SubPlan;
+        $sub->plan = $validated['plan'];
+        $sub->amount = $validated['amount'];
+        $sub->expiry_date = $validated['expiry_date'];
+        $sub->client_id = auth()->user()->id;
+        $sub->save();
+
+        return $this->success($sub, "Subscription Added", 200);
+     }
+
+
 
     public function token() {
         $text = '';

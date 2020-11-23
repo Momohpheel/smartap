@@ -389,44 +389,40 @@ class UserController extends Controller
         }
     }
 
-    public function sendMessage($number){
-        $url = "https://api.africastalking.com/version1/messaging";
-        $ch = curl_init($url);
+    public function changePassword(Request $request){
 
-        curl_setopt_array($ch, array(
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode([
-                'username'=> 'sandbox',
-                'to'=> $number,
-                'message' => "Hi, will you mind coming out to move your car?
-                                 it's actually blocking mine! Thanks!",
-                'from' => 'SMART-TAP'
-            ]),
-            CURLOPT_HTTPHEADER => array(
-                'cache-control: no-cache',
-                'Content-Type: application/x-www-form-urlencoded',
-                'Accept: application/json',
-                'apiKey: MyAppApiKey'
-            ),
-        ));
+        try{
+            $validated = $request->validate([
+                'password' => "required|string",
+                'new_password' => "required|string",
+                "confirm_password" => "required|string"
+            ]);
+
+            if ($validated['new_password'] == $validated['confirm_password']){
+
+                $user = User::where('id', auth()->user()->id)->where('password', Hash::check($validated['password']))->first();
+                if ($user){
+                    $user->password = Hash::make($validated['new_password']);
+                    $user->save();
+                    $data = [
+                        'name' => $user->name,
+                        'phone_number' => $user->phone_number,
+                        'company_token' => $user->company_token,
+                    ];
+                    return $this->success($data, "Password changed", 200);
+                }else{
+                    return $this->error([], "User doesn't exist", 400);
+                }
 
 
-        $response = curl_exec($ch);
-        $error = curl_error($ch);
+            }else{
+                return $this->error([], "Passwords do not match", 400);
+            }
 
-        if ($error){
-            die('There was an error: '. $error);
+        }catch(Exception $e){
+            return $this->error($e->getMessage(), "Password couldnt be changed", 400);
         }
 
-
-
-        $trans = json_decode($response);
-
-        header('Location :'. $trans->data->authorization_url);
-        //curl_close($ch);
-
-
-
     }
+
 }

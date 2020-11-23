@@ -24,6 +24,9 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('login', 'ClientController@clientLogin');
         Route::put('profile', 'ClientController@addProfile')->middleware('auth:client');
         Route::get('/users', 'ClientController@getUsersRegisteredUnderCompany')->middleware('auth:client');
+        Route::post('/change-password', 'ClientController@changePassword')->middleware('auth:client');
+        Route::get('/user', 'ClientController@getUserDetails')->middleware('auth:client');
+        Route::post('/subscription', 'ClientController@sub_plan')->middleware('auth:client');
     });
 
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
@@ -43,5 +46,6 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('vehicle/search', 'UserController@searchVehicle')->middleware('auth:api');
        Route::post('logout', 'UserController@userLogout')->middleware('auth:api');
        Route::get('movement', 'UserController@userMovement')->middleware('auth:api');
+       Route::post('/change-password', 'UserController@changePassword')->middleware('auth:api');
     });
 });
