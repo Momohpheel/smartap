@@ -19,7 +19,7 @@ class CreateSubscriptionPlansTable extends Migration
             $table->string('amount');
             $table->string('expiry_date');
             $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->on('id')->references('clients');
+            $table->foreign('client_id')->on('clients')->references('id');
             $table->timestamps();
         });
     }
