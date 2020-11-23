@@ -381,9 +381,10 @@ class UserController extends Controller
                 return $this->error(true, "User Not Logged In", 400);
             }
 
-            // Auth::logout();
+            Auth::logout();
 
             return $this->success(true, "User Successfully logged out", 200);
+
         }else{
             return $this->error(true, "wrong company token", 400);
         }
