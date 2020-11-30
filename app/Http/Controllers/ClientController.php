@@ -322,12 +322,12 @@ class ClientController extends Controller
             'logo' => 'required|image|mimes:jpeg,png,jpg|max:1999|nullable',
         ]);
 
-        if (request()->hasFile('image')){
-            $image_name = request()->file('image')->getClientOriginalName();
+        if (request()->hasFile('logo')){
+            $image_name = request()->file('logo')->getClientOriginalName();
             $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
-            $image_extension = request()->file('image')->getClientOriginalExtension();
+            $image_extension = request()->file('logo')->getClientOriginalExtension();
             $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
-            $path = request()->file('image')->storeAs('public/images', $image_to_store);
+            $path = request()->file('logo')->storeAs('public/images', $image_to_store);
 
             $user_id = auth()->user()->id;
             $client = Client::find($user_id);
