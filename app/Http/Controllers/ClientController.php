@@ -155,7 +155,7 @@ class ClientController extends Controller
                             'longitude' => $client_email->longitude,
                             'state' => $client_email->state,
                             'lga' => $client_email->lga,
-                            'token' => $client_phone->token,
+                            'token' => $client_email->token,
                             'description' => $client_email->description,
                             //'subscription_plan' => $client_email->sunscription_plan,
                             'access_token' => $accessToken,
