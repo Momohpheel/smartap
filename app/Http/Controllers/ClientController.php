@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Model\Client;
 use App\Model\User;
 use App\Model\PlateNo;
+use Illuminate\Support\Facades\Storage;
 use App\Model\subscriptionPlan as SubPlan;
 use App\Traits\Response;
 
