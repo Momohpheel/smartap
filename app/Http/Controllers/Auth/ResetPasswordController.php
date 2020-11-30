@@ -37,6 +37,7 @@ class ResetPasswordController extends Controller
         $this->setGuard();
     }
 
+
     /**
      * Display the password reset view for the given token.
      *

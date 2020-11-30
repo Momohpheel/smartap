@@ -260,7 +260,10 @@ class ClientController extends Controller
             $data = [
                 'name' => $user->name,
                 'phone' => $user->phone_number,
+                'email' => $user->email,
                 'address' => $user->address,
+                'city' => $user->city,
+                'state' => $user->state,
                 'vehicles' => $cars
             ];
 
@@ -295,20 +298,59 @@ class ClientController extends Controller
              'token' => 'required'
          ]);
          $client = Client::where('token', $validated['token'])->first();
-         $data = [
-            'company_name' => $client->company_name,
-            'address' => $client->address,
-            'latitude' => $client->lat,
-            'longitude' => $client->long,
-            'state' => $client->state,
-            'lga' => $client->lga,
-            'description' => $client->description,
-            'token' => $client->token,
+         if ($client){
+            $data = [
+                'company_name' => $client->company_name,
+                'address' => $client->address,
+                'latitude' => $client->lat,
+                'longitude' => $client->long,
+                'state' => $client->state,
+                'lga' => $client->lga,
+                'description' => $client->description,
+                'token' => $client->token,
 
-         ];
-         return $this->success($data, "Client Details", 200);
+             ];
+             return $this->success($data, "Client Details", 200);
+         }else{
+            return $this->error(true, "Invalid token", 400);
+         }
+
      }
 
+     function uploadAvatar(Request $request){
+        $data = request()->validate( [
+            'logo' => 'required|image|mimes:jpeg,png,jpg|max:1999|nullable',
+        ]);
+
+        if (request()->hasFile('image')){
+            $image_name = request()->file('image')->getClientOriginalName();
+            $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
+            $image_extension = request()->file('image')->getClientOriginalExtension();
+            $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
+            $path = request()->file('image')->storeAs('public/images', $image_to_store);
+
+            $user_id = auth()->user()->id;
+            $client = Client::find($user_id);
+            $client->logo = 'public/images/' . $image_to_store;
+            $client->save();
+            return $this->success("Image Upload successfull!", 200);
+        }
+
+        return $this->error("Please provide and image file");
+    }
+    public function getLogo(){
+        $client = Client::find(auth()->user()->id);
+        if ($client){
+            if ($client->logo){
+                return $this->success(["logo" => env('APP_URL') . Storage::url($client->logo)], "Company Logo!", 200);
+            }else{
+                return $this->error("No logo found!");
+            }
+        }else{
+            return $this->error("User doesn't exist!");
+        }
+
+    }
     public function token() {
         $text = '';
         $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
