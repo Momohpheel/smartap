@@ -333,10 +333,10 @@ class ClientController extends Controller
             $client = Client::find($user_id);
             $client->logo = 'public/images/' . $image_to_store;
             $client->save();
-            return $this->success("Image Upload successfull!", 200);
+            return $this->success($client->logo,"Image Upload successfull!", 200);
         }
 
-        return $this->error("Please provide and image file");
+        return $this->error(true,"Please provide and image file");
     }
     public function getLogo(){
         $client = Client::find(auth()->user()->id);
@@ -344,10 +344,10 @@ class ClientController extends Controller
             if ($client->logo){
                 return $this->success(["logo" => env('APP_URL') . Storage::url($client->logo)], "Company Logo!", 200);
             }else{
-                return $this->error("No logo found!");
+                return $this->error(true,"No logo found!");
             }
         }else{
-            return $this->error("User doesn't exist!");
+            return $this->error(true,"User doesn't exist!");
         }
 
     }
