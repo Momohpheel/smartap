@@ -133,6 +133,7 @@ class ClientController extends Controller
                             'lga' => $client_phone->lga,
                             'token' => $client_phone->token,
                             'description' => $client_phone->description,
+                            'logo' => env('APP_URL') . Storage::url($client_phone->logo) ?? null,
                             //'subscription_plan' => $client_phone->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
@@ -157,6 +158,7 @@ class ClientController extends Controller
                             'lga' => $client_email->lga,
                             'token' => $client_email->token,
                             'description' => $client_email->description,
+                            'logo' => env('APP_URL') . Storage::url($client_email->logo) ?? null,
                             //'subscription_plan' => $client_email->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
@@ -277,6 +279,36 @@ class ClientController extends Controller
 
      }
 
+     public function getUserAtLocationDetails(){
+
+        try{
+            $company = Client::where('id', auth()->user()->id)->first();
+            $users = User::where('company_token' ,$company->token)->where('at_location', true)->get();
+            //if (count($users) == 0){return 'yes';}else{return 'no';}
+            if(count($users) == 0){
+                return $this->success([], "No User is registered under this company",200);
+            }
+            else{
+                foreach($users as $user){
+                    $data[] = [
+                        'name' => $user->name,
+                        'phone_number' => $user->phone_number,
+                        'email' => $user->email,
+                        'address' => $user->address,
+                        'city' => $user->city,
+                        'state' => $user->state,
+                        'at_location' => $user->at_location,
+                    ];
+                }
+
+                return $this->success($data, "Users Retrieved",200);
+            }
+
+        }catch(Exception $e){
+            $this->error($e->getMessage(), "Error in gettting Users", 400);
+        }
+     }
+
      public function sub_plan(Request $request){
         $validated = $request->validate([
             'plan' => "required|string",
@@ -309,7 +341,7 @@ class ClientController extends Controller
                 'lga' => $client->lga,
                 'description' => $client->description,
                 'token' => $client->token,
-
+                'logo' => env('APP_URL') . Storage::url($client->logo) ?? null
              ];
              return $this->success($data, "Client Details", 200);
          }else{
@@ -339,19 +371,19 @@ class ClientController extends Controller
 
         return $this->error(true,"Please provide and image file");
     }
-    public function getLogo(){
-        $client = Client::find(auth()->user()->id);
-        if ($client){
-            if ($client->logo){
-                return $this->success(["logo" => env('APP_URL') . Storage::url($client->logo)], "Company Logo!", 200);
-            }else{
-                return $this->error(true,"No logo found!");
-            }
-        }else{
-            return $this->error(true,"User doesn't exist!");
-        }
+    // public function getLogo(){
+    //     $client = Client::find(auth()->user()->id);
+    //     if ($client){
+    //         if ($client->logo){
+    //             return $this->success(["logo" => env('APP_URL') . Storage::url($client->logo)], "Company Logo!", 200);
+    //         }else{
+    //             return $this->error(true,"No logo found!");
+    //         }
+    //     }else{
+    //         return $this->error(true,"User doesn't exist!");
+    //     }
 
-    }
+    // }
     public function token() {
         $text = '';
         $possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
