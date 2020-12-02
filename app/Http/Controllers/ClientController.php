@@ -342,7 +342,7 @@ class ClientController extends Controller
                 'lga' => $client->lga,
                 'description' => $client->description,
                 'token' => $client->token,
-                'logo' => env('APP_URL') . Storage::url($client->logo) ?? null
+                'logo' => 'https://smartap.herokuapp.com'.Storage::url($client_phone->logo) ?? null
              ];
              return $this->success($data, "Client Details", 200);
          }else{
@@ -361,7 +361,7 @@ class ClientController extends Controller
             $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
             $image_extension = request()->file('logo')->getClientOriginalExtension();
             $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
-            $path = request()->file('logo')->storeAs('public/', $image_to_store);
+            $path = request()->file('logo')->storeAs('public', $image_to_store);
 
             $user_id = auth()->user()->id;
             $client = Client::find($user_id);
