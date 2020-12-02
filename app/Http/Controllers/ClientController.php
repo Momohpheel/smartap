@@ -365,7 +365,7 @@ class ClientController extends Controller
 
             $user_id = auth()->user()->id;
             $client = Client::find($user_id);
-            $client->logo = 'public/' . $image_to_store;
+            $client->logo = $image_to_store;
             $client->save();
             return $this->success($client->logo,"Image Upload successfull!", 200);
         }
