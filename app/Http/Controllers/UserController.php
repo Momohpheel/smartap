@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Client;
 use App\Model\User;
 use App\Model\PlateNo;
+use Illuminate\Support\Facades\Storage;
 use App\Traits\Response;
 use App\Model\Vehicle;
 use App\Model\Movement;
