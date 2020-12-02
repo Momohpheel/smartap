@@ -342,7 +342,7 @@ class ClientController extends Controller
                 'lga' => $client->lga,
                 'description' => $client->description,
                 'token' => $client->token,
-                'logo' => 'https://smartap.herokuapp.com'.Storage::url($client_phone->logo) ?? null
+                'logo' => 'https://smartap.herokuapp.com'.Storage::url($client->logo) ?? null
              ];
              return $this->success($data, "Client Details", 200);
          }else{
