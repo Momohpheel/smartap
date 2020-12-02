@@ -429,7 +429,7 @@ class UserController extends Controller
 
     }
 
-    public function getCompanyDetails(){
+    public function getCompanyDetails(Request $request){
         $validated = $request->validate([
             'token' => 'required',
         ]);
