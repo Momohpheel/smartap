@@ -299,7 +299,7 @@ class ClientController extends Controller
                         'address' => $user->address,
                         'city' => $user->city,
                         'state' => $user->state,
-                        'vehicles' => count($vehicles),
+                        'vehicles' => count($vehicles) ?? null,
                         'at_location' => $user->at_location,
                     ];
                 }
