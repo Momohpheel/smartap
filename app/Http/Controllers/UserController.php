@@ -434,6 +434,7 @@ class UserController extends Controller
             'token' => 'required',
         ]);
         $client = Client::where('token', $validated['token'])->first();
+
         if ($client){
            $data = [
                'company_name' => $client->company_name,
