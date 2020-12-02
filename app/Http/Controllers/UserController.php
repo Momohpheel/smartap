@@ -425,6 +425,40 @@ class UserController extends Controller
             return $this->error($e->getMessage(), "Password couldnt be changed", 400);
         }
 
+
     }
+
+    public function getUserDetails(){
+
+
+        $user = User::where('id', auth()->user()->id)->first();
+        if ($user){
+            $vehicles = PlateNo::where('user_id', auth()->user()->id)->get();
+            foreach($vehicles as $vehicle){
+                $cars[] = [
+                    'plate_number' => $vehicle->plate_number,
+                    'brand' => $vehicle->brand,
+                    'type' => $vehicle->type,
+                    'color' => $vehicle->color,
+                ];
+            }
+            $data = [
+                'name' => $user->name,
+                'phone' => $user->phone_number,
+                'email' => $user->email,
+                'address' => $user->address,
+                'city' => $user->city,
+                'state' => $user->state,
+                'vehicles' => $cars
+            ];
+
+
+        return $this->success($data, "User Details", 200);
+
+        }else{
+            return $this->error([], "No user found", 400);
+        }
+
+     }
 
 }
