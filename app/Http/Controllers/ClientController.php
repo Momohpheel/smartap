@@ -330,10 +330,8 @@ class ClientController extends Controller
      }
 
      public function getClientInfo(Request $request){
-         $validated = $request->validate([
-             'token' => 'required'
-         ]);
-         $client = Client::where('token', $validated['token'])->first();
+        $company = auth()->user()->id;
+         $client = Client::where('id', $company)->first();
          if ($client){
             $data = [
                 'company_name' => $client->company_name,
