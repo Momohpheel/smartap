@@ -289,8 +289,9 @@ class ClientController extends Controller
                 return $this->success([], "No User is registered under this company",200);
             }
             else{
-                $vehicles = PlateNo::where('user_id', auth()->user()->id)->get();
+
                 foreach($users as $user){
+                    $vehicles = PlateNo::where('user_id', $user->id)->get();
                     $data[] = [
                         'name' => $user->name,
                         'phone_number' => $user->phone_number,
