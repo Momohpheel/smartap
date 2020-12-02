@@ -363,9 +363,11 @@ class ClientController extends Controller
             $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
             $path = request()->file('logo')->storeAs('public', $image_to_store);
 
+
+            $response = cloudinary()->upload($request->file('logo')->getRealPath())->getSecurePath();
             $user_id = auth()->user()->id;
             $client = Client::find($user_id);
-            $client->logo = $image_to_store;
+            $client->logo = $response;
             $client->save();
             return $this->success($client->logo,"Image Upload successfull!", 200);
         }
