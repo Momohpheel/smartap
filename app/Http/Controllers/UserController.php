@@ -443,6 +443,7 @@ class UserController extends Controller
                'longitude' => $client->long,
                'state' => $client->state,
                'lga' => $client->lga,
+               'token' => $client->token,
                'description' => $client->description,
                'logo' => 'https://smartap.herokuapp.com'.Storage::url($client->logo) ?? null
             ];
