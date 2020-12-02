@@ -430,8 +430,10 @@ class UserController extends Controller
     }
 
     public function getCompanyDetails(){
-        $user = User::where('id', auth()->user()->id)->first();
-        $client = Client::where('token', $user->company_token)->first();
+        $validated = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = Client::where('token', $validated['token'])->first();
         if ($client){
            $data = [
                'company_name' => $client->company_name,

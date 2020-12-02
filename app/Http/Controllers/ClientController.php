@@ -361,11 +361,11 @@ class ClientController extends Controller
             $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
             $image_extension = request()->file('logo')->getClientOriginalExtension();
             $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
-            $path = request()->file('logo')->storeAs('public/images', $image_to_store);
+            $path = request()->file('logo')->storeAs('public/', $image_to_store);
 
             $user_id = auth()->user()->id;
             $client = Client::find($user_id);
-            $client->logo = 'public/images/' . $image_to_store;
+            $client->logo = 'public/' . $image_to_store;
             $client->save();
             return $this->success($client->logo,"Image Upload successfull!", 200);
         }

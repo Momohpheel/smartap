@@ -35,12 +35,12 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-
+    Route::get('get-company-profile', 'UserController@getCompanyDetails');
     Route::group(['prefix' => 'user'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::post('login', 'Auth\LoginController@userLogin');
         Route::post('profile', 'UserController@userProfile')->middleware('auth:api');
-        Route::get('company', 'UserController@getCompanyDetails')->middleware('auth:api');
+
         Route::post('vehicle', 'UserController@vehicleRegisteration')->middleware('auth:api');
         Route::put('vehicle/{id}', 'UserController@updateVehicle')->middleware('auth:api');
         Route::post('vehicle/add', 'UserController@addPlateNumber')->middleware('auth:api');
