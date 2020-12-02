@@ -289,6 +289,7 @@ class ClientController extends Controller
                 return $this->success([], "No User is registered under this company",200);
             }
             else{
+                $vehicles = PlateNo::where('user_id', auth()->user()->id)->get();
                 foreach($users as $user){
                     $data[] = [
                         'name' => $user->name,
@@ -297,6 +298,7 @@ class ClientController extends Controller
                         'address' => $user->address,
                         'city' => $user->city,
                         'state' => $user->state,
+                        'vehicles' => count($vehicles),
                         'at_location' => $user->at_location,
                     ];
                 }
