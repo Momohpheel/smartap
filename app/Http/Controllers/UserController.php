@@ -443,7 +443,7 @@ class UserController extends Controller
                'state' => $client->state,
                'lga' => $client->lga,
                'description' => $client->description,
-               'logo' => env('APP_URL') . Storage::url($client->logo) ?? null
+               'logo' => 'https://smartap.herokuapp.com'.Storage::url($client->logo) ?? null
             ];
             return $this->success($data, "Client Details", 200);
         }else{

@@ -133,7 +133,7 @@ class ClientController extends Controller
                             'lga' => $client_phone->lga,
                             'token' => $client_phone->token,
                             'description' => $client_phone->description,
-                            'logo' => env('APP_URL') . Storage::url($client_phone->logo) ?? null,
+                            'logo' => 'https://smartap.herokuapp.com'.Storage::url($client_phone->logo) ?? null,
                             //'subscription_plan' => $client_phone->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
@@ -158,7 +158,7 @@ class ClientController extends Controller
                             'lga' => $client_email->lga,
                             'token' => $client_email->token,
                             'description' => $client_email->description,
-                            'logo' => env('APP_URL') . Storage::url($client_email->logo) ?? null,
+                            'logo' => 'https://smartap.herokuapp.com'.Storage::url($client_email->logo) ?? null,
                             //'subscription_plan' => $client_email->sunscription_plan,
                             'access_token' => $accessToken,
                         ];
