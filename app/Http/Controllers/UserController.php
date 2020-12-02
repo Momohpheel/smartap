@@ -445,7 +445,7 @@ class UserController extends Controller
                'lga' => $client->lga,
                'token' => $client->token,
                'description' => $client->description,
-               'logo' => 'https://smartap.herokuapp.com'.Storage::url($client->logo) ?? null
+               'logo' => $client->logo ?? null
             ];
             return $this->success($data, "Client Details", 200);
         }else{
