@@ -428,36 +428,25 @@ class UserController extends Controller
 
     }
 
-    public function getUserDetails(){
-
-
+    public function getCompanyDetails(){
         $user = User::where('id', auth()->user()->id)->first();
-        if ($user){
-            $vehicles = PlateNo::where('user_id', auth()->user()->id)->get();
-            foreach($vehicles as $vehicle){
-                $cars[] = [
-                    'plate_number' => $vehicle->plate_number,
-                    'brand' => $vehicle->brand,
-                    'type' => $vehicle->type,
-                    'color' => $vehicle->color,
-                ];
-            }
-            $data = [
-                'name' => $user->name,
-                'phone' => $user->phone_number,
-                'email' => $user->email,
-                'address' => $user->address,
-                'city' => $user->city,
-                'state' => $user->state,
-                'vehicles' => $cars
+        $client = Client::where('token', $user->token)->first();
+        if ($client){
+           $data = [
+               'company_name' => $client->company_name,
+               'address' => $client->address,
+               'latitude' => $client->lat,
+               'longitude' => $client->long,
+               'state' => $client->state,
+               'lga' => $client->lga,
+               'description' => $client->description,
+               'logo' => env('APP_URL') . Storage::url($client->logo) ?? null
             ];
-
-
-        return $this->success($data, "User Details", 200);
-
+            return $this->success($data, "Client Details", 200);
         }else{
-            return $this->error([], "No user found", 400);
+           return $this->error(true, "Invalid token", 400);
         }
+
 
      }
 
