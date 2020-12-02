@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('register', 'UserController@registerUser');
         Route::post('login', 'Auth\LoginController@userLogin');
         Route::post('profile', 'UserController@userProfile')->middleware('auth:api');
-        Route::get('profile', 'UserController@getCompanyDetails')->middleware('auth:api');
+        Route::get('company', 'UserController@getCompanyDetails')->middleware('auth:api');
         Route::post('vehicle', 'UserController@vehicleRegisteration')->middleware('auth:api');
         Route::put('vehicle/{id}', 'UserController@updateVehicle')->middleware('auth:api');
         Route::post('vehicle/add', 'UserController@addPlateNumber')->middleware('auth:api');
