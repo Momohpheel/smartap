@@ -233,7 +233,7 @@ class ClientController extends Controller
                     ];
                     return $this->success($data, "Password changed", 200);
                 }else{
-                    return $this->error([], "Client doesn't exist", 400);
+                    return $this->error([], "Old Password is wrong!", 400);
                 }
 
 
