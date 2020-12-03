@@ -215,7 +215,7 @@ class ClientController extends Controller
 
         try{
             $validated = $request->validate([
-                "token" => "required",
+
                 'password' => "required|string",
                 'new_password' => "required|string",
                 "confirm_password" => "required|string"
@@ -223,7 +223,7 @@ class ClientController extends Controller
 
             if ($validated['new_password'] == $validated['confirm_password']){
 
-                $client = Client::where('id', auth()->user()->id)->where('password', md5($validated['password']))->where('token', $validated['token'])->first();
+                $client = Client::where('id', auth()->user()->id)->where('password', md5($validated['password']))->first();
                 if ($client){
                     $client->password = md5($validated['new_password']);
                     $client->save();
@@ -362,11 +362,11 @@ class ClientController extends Controller
         ]);
 
         if (request()->hasFile('logo')){
-            $image_name = request()->file('logo')->getClientOriginalName();
-            $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
-            $image_extension = request()->file('logo')->getClientOriginalExtension();
-            $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
-            $path = request()->file('logo')->storeAs('public', $image_to_store);
+            // $image_name = request()->file('logo')->getClientOriginalName();
+            // $image_name_withoutextensions =  implode("_", explode(" ", pathinfo($image_name, PATHINFO_FILENAME)));
+            // $image_extension = request()->file('logo')->getClientOriginalExtension();
+            // $image_to_store = $image_name_withoutextensions.'_'.time().'.'. $image_extension;
+            // $path = request()->file('logo')->storeAs('public', $image_to_store);
 
 
             $response = cloudinary()->upload($request->file('logo')->getRealPath())->getSecurePath();
