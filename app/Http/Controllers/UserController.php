@@ -383,7 +383,7 @@ class UserController extends Controller
                 return $this->error(true, "User Not Logged In", 400);
             }
 
-            $user->logout();
+            $request->user()->token()->revoke()
 
             return $this->success(true, "User Successfully logged out", 200);
 
