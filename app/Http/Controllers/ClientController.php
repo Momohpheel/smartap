@@ -189,15 +189,16 @@ class ClientController extends Controller
             }
             else{
                 foreach($users as $user){
+                   $vehicles = PlateNo::where('user_id', $user->id)->get();
                     $data[] = [
                         'id' => $user->id,
-                        'vehicles' => count($vehicles) ?? null,
                         'name' => $user->name,
                         'phone_number' => $user->phone_number,
                         'email' => $user->email,
                         'address' => $user->address,
                         'city' => $user->city,
                         'state' => $user->state,
+                        'vehicles' => count($vehicles) ?? null,
                         'at_location' => $user->at_location,
                     ];
                 }
