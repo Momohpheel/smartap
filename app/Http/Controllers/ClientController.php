@@ -223,7 +223,7 @@ class ClientController extends Controller
 
             if ($validated['new_password'] == $validated['confirm_password']){
 
-                $client = Client::where('id', auth()->user()->id)->where('password', md5($validated['password']))->first();
+                $client = Client::where('id', auth()->user()->id)->where('password', md5($validated['old_password']))->first();
                 if ($client){
                     $client->password = md5($validated['new_password']);
                     $client->save();
