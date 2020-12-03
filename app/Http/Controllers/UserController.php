@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Model\Client;
+use Illuminate\Support\Facades\Auth;
 use App\Model\User;
 use App\Model\PlateNo;
 use Illuminate\Support\Facades\Storage;
