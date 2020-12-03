@@ -383,7 +383,7 @@ class UserController extends Controller
                 return $this->error(true, "User Not Logged In", 400);
             }
 
-            Auth::logout();
+            $user->logout();
 
             return $this->success(true, "User Successfully logged out", 200);
 
