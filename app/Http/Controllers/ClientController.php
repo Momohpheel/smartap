@@ -216,7 +216,7 @@ class ClientController extends Controller
         try{
             $validated = $request->validate([
 
-                'password' => "required|string",
+                'old_password' => "required|string",
                 'new_password' => "required|string",
                 "confirm_password" => "required|string"
             ]);
