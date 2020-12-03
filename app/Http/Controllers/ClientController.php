@@ -190,6 +190,8 @@ class ClientController extends Controller
             else{
                 foreach($users as $user){
                     $data[] = [
+                        'id' => $user->id,
+                        'vehicles' => count($vehicles) ?? null,
                         'name' => $user->name,
                         'phone_number' => $user->phone_number,
                         'email' => $user->email,
@@ -261,6 +263,7 @@ class ClientController extends Controller
                 ];
             }
             $data = [
+                'id' => $user->id,
                 'name' => $user->name,
                 'phone' => $user->phone_number,
                 'email' => $user->email,
@@ -293,6 +296,7 @@ class ClientController extends Controller
                 foreach($users as $user){
                     $vehicles = PlateNo::where('user_id', $user->id)->get();
                     $data[] = [
+                        'id' => $user->id,
                         'name' => $user->name,
                         'phone_number' => $user->phone_number,
                         'email' => $user->email,
