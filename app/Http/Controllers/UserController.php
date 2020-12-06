@@ -450,7 +450,7 @@ class UserController extends Controller
             ];
             return $this->success($data, "Client Details", 200);
         }else{
-           return $this->error(true, "Invalid token", 400);
+           return $this->error(true, "This token does't belong to any Organization", 400);
         }
 
 
